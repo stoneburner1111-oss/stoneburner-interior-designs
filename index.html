@@ -1281,10 +1281,11 @@
             <button class="room-tab" onclick="switchRoom(2,this)">Master Bath</button>
             <button class="room-tab add-room-btn" onclick="addRoom()">+ Add Room</button>
           </div>
-          <div style="display:flex;gap:8px;margin-bottom:20px;padding:14px 18px;background:white;border:1px solid #E8DFD0;border-radius:8px;">
-            <span style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6E6E6E;display:flex;align-items:center;white-space:nowrap;">Paste URL:</span>
-            <input type="text" id="boardUrlInput" placeholder="Paste image URL here (right-click image on any site > Copy Image Address)..." style="flex:1;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:#FAFAF6;" onkeydown="if(event.key==='Enter')addImageFromActiveRoom()">
-            <button class="portal-btn" onclick="addImageFromActiveRoom()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Add to Board</button>
+          <div style="display:flex;gap:8px;margin-bottom:20px;padding:14px 18px;background:white;border:1px solid #E8DFD0;border-radius:8px;flex-wrap:wrap;">
+            <input type="text" id="boardUrlInput" placeholder="Paste image URL (right-click image > Copy Image Address)..." style="flex:1;min-width:200px;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:#FAFAF6;" onkeydown="if(event.key==='Enter')addImageFromActiveRoom()">
+            <button class="portal-btn" onclick="addImageFromActiveRoom()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Add URL</button>
+            <button class="portal-btn portal-btn-outline" onclick="document.getElementById('visionUpload').click()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Upload Image</button>
+            <input type="file" id="visionUpload" accept="image/*" multiple style="display:none" onchange="uploadToActiveRoom(this.files)">
           </div>
           <div id="roomBoards">
             <div class="room-board active">
@@ -2183,6 +2184,12 @@ function handleRoomUpload(files, roomIdx) {
 
 // Existing conditions upload
 // URL image paste and external drag for vision boards
+function uploadToActiveRoom(files) {
+  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
+  var activeIdx = 0;
+  tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
+  handleRoomUpload(files, activeIdx);
+}
 function addImageFromActiveRoom() {
   var input = document.getElementById('boardUrlInput');
   if (!input || !input.value.trim()) return;
