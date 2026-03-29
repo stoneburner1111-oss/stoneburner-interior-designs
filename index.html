@@ -1500,6 +1500,25 @@ function slideTestimonials(dir) {
   slider.style.transform = `translateX(${testPos}px)`;
 }
 
+// ===== BEFORE/AFTER SLIDER =====
+const baContainer = document.getElementById('baContainer');
+const baAfter = document.getElementById('baAfter');
+const baHandle = document.getElementById('baHandle');
+let baDragging = false;
+function updateBA(x) {
+  const rect = baContainer.getBoundingClientRect();
+  let pct = ((x - rect.left) / rect.width) * 100;
+  pct = Math.max(5, Math.min(95, pct));
+  baAfter.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+  baHandle.style.left = pct + '%';
+}
+baContainer.addEventListener('mousedown', e => { baDragging = true; updateBA(e.clientX); });
+window.addEventListener('mousemove', e => { if (baDragging) updateBA(e.clientX); });
+window.addEventListener('mouseup', () => baDragging = false);
+baContainer.addEventListener('touchstart', e => { baDragging = true; updateBA(e.touches[0].clientX); }, { passive: true });
+baContainer.addEventListener('touchmove', e => { if (baDragging) updateBA(e.touches[0].clientX); }, { passive: true });
+window.addEventListener('touchend', () => baDragging = false);
+
 // ===== ALBUM DATA & PORTFOLIO =====
 const defaultAlbums = [
   { name: 'Riverstone', location: 'Naples, FL', key: 'riverstone', visible: true, photos: [
