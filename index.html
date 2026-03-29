@@ -788,6 +788,54 @@
   }
   .toggle-switch.on::after { transform: translateX(20px); }
 
+  /* Project Folders */
+  .folder-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px; margin-bottom: 24px;
+  }
+  .folder-card {
+    background: white; border: 1px solid var(--sand); border-radius: 10px;
+    padding: 24px 20px; text-align: center; cursor: pointer;
+    transition: all 0.3s; position: relative;
+  }
+  .folder-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: var(--terracotta); }
+  .folder-icon { font-size: 36px; margin-bottom: 10px; display: block; }
+  .folder-name { font-size: 14px; font-weight: 500; color: var(--charcoal); margin-bottom: 2px; }
+  .folder-count { font-size: 11px; color: var(--text-light); letter-spacing: 1px; }
+  .folder-cover {
+    width: 100%; aspect-ratio: 16/10; border-radius: 8px 8px 0 0;
+    background-size: cover; background-position: center;
+    margin: -24px -20px 16px; width: calc(100% + 40px);
+  }
+  .new-folder-card {
+    border: 2px dashed var(--sand); background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px; min-height: 120px;
+    font-size: 13px; color: var(--text-light); cursor: pointer;
+    border-radius: 10px; transition: all 0.3s;
+  }
+  .new-folder-card:hover { border-color: var(--terracotta); background: rgba(196,120,91,0.02); }
+  .folder-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--terracotta); cursor: pointer;
+    margin-bottom: 16px; padding: 8px 0; border: none;
+    background: none; font-family: var(--font-body); transition: all 0.2s;
+  }
+  .folder-back:hover { padding-left: 4px; }
+  .folder-delete {
+    position: absolute; top: 8px; right: 8px; width: 24px; height: 24px;
+    border-radius: 50%; background: rgba(0,0,0,0.06); border: none;
+    color: var(--text-light); font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: all 0.2s;
+  }
+  .folder-card:hover .folder-delete { opacity: 1; }
+  .folder-delete:hover { background: #F5E6E2; color: #C44; }
+
+  /* Photo card drag handle */
+  .photo-card[draggable="true"] { cursor: grab; }
+  .photo-card[draggable="true"]:active { cursor: grabbing; }
+
   /* Back to dashboard btn */
   .back-dash {
     display: flex; align-items: center; gap: 8px; padding: 12px 20px;
@@ -1133,104 +1181,44 @@
         <!-- HERO SLIDES -->
         <div class="scope-card" style="margin-bottom:20px;">
           <div class="scope-card-header"><div class="scope-card-title">Hero Slides — Landing Page</div><button class="portal-btn" onclick="applyHeroChanges()" id="heroSaveBtn" style="font-size:11px; padding:8px 18px;">Save & Apply</button></div>
-          <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Control which photos rotate on the main landing page and how zoomed in they appear.</p>
+          <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Control which photos appear on the landing page hero and adjust zoom.</p>
           <div id="heroSlideManager" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:16px;">
-            <div class="photo-card" data-hero="0">
-              <div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w1200-h800-b0-p0---.jpg')"></div>
-              <div class="photo-card-body">
-                <input class="photo-card-label" value="Riverstone — Living Room">
-                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                  <label style="font-size:11px; color:var(--text-light); letter-spacing:1px;">ZOOM:</label>
-                  <input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(0,this.value)" oninput="updateHeroZoom(0,this.value)">
-                  <span class="hero-zoom-val" style="font-size:12px; color:var(--text-light); min-width:35px;">102%</span>
-                </div>
-                <div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">● Slide 1</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div>
-              </div>
-            </div>
-            <div class="photo-card" data-hero="1">
-              <div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w1200-h800-b0-p0---.jpg')"></div>
-              <div class="photo-card-body">
-                <input class="photo-card-label" value="Estero — Remodel">
-                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                  <label style="font-size:11px; color:var(--text-light); letter-spacing:1px;">ZOOM:</label>
-                  <input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(1,this.value)" oninput="updateHeroZoom(1,this.value)">
-                  <span class="hero-zoom-val" style="font-size:12px; color:var(--text-light); min-width:35px;">102%</span>
-                </div>
-                <div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">● Slide 2</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div>
-              </div>
-            </div>
-            <div class="photo-card" data-hero="2">
-              <div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w1200-h800-b0-p0---.jpg')"></div>
-              <div class="photo-card-body">
-                <input class="photo-card-label" value="Royal Harbor — Kitchen">
-                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                  <label style="font-size:11px; color:var(--text-light); letter-spacing:1px;">ZOOM:</label>
-                  <input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(2,this.value)" oninput="updateHeroZoom(2,this.value)">
-                  <span class="hero-zoom-val" style="font-size:12px; color:var(--text-light); min-width:35px;">102%</span>
-                </div>
-                <div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">● Slide 3</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div>
-              </div>
-            </div>
+            <div class="photo-card" data-hero="0"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w1200-h800-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Riverstone — Living Room"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(0,this.value)" oninput="updateHeroZoom(0,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 1</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
+            <div class="photo-card" data-hero="1"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w1200-h800-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Estero — Remodel"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(1,this.value)" oninput="updateHeroZoom(1,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 2</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
+            <div class="photo-card" data-hero="2"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w1200-h800-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Royal Harbor — Kitchen"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(2,this.value)" oninput="updateHeroZoom(2,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 3</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
           </div>
         </div>
 
         <!-- BEFORE & AFTER -->
         <div class="scope-card" style="margin-bottom:20px;">
           <div class="scope-card-header"><div class="scope-card-title">Before & After Slider</div><button class="portal-btn" onclick="applyBAChanges()" id="baSaveBtn" style="font-size:11px; padding:8px 18px;">Save & Apply</button></div>
-          <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Set the photos for the public site before/after comparison slider.</p>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
             <div><div class="scope-detail-label" style="margin-bottom:8px;">Before Photo</div><div id="baBeforePreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg'); border:2px solid var(--sand);"></div></div>
             <div><div class="scope-detail-label" style="margin-bottom:8px;">After Photo</div><div id="baAfterPreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg'); border:2px solid var(--terracotta);"></div></div>
           </div>
         </div>
 
-        <!-- PORTFOLIO ALBUMS -->
-        <div class="scope-card" style="margin-bottom:20px;">
-          <div class="scope-card-header"><div class="scope-card-title">Portfolio Albums</div><button class="portal-btn portal-btn-outline" onclick="addAlbum()" style="font-size:11px; padding:6px 14px;">+ New Album</button></div>
-          <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Group photos into project albums that appear in the portfolio section of the site.</p>
-          <div id="albumList">
-            <div class="share-item"><div class="share-item-info"><div class="share-item-name">Riverstone — Naples</div><div class="share-item-desc">1 photo</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="share-item"><div class="share-item-info"><div class="share-item-name">Royal Harbor — Naples</div><div class="share-item-desc">1 photo</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="share-item"><div class="share-item-info"><div class="share-item-name">Bayfront — Fort Myers</div><div class="share-item-desc">5 photos</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="share-item"><div class="share-item-info"><div class="share-item-name">Shadowood Kitchen — Fort Myers</div><div class="share-item-desc">1 photo</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="share-item"><div class="share-item-info"><div class="share-item-name">Estero Remodel</div><div class="share-item-desc">1 photo</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
-            <div class="share-item"><div class="share-item-info"><div class="share-item-name">Beach Condo Rentals</div><div class="share-item-desc">1 photo</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
-          </div>
-        </div>
-
-        <!-- ALL SITE PHOTOS -->
+        <!-- PROJECT FOLDERS -->
         <div class="scope-card">
-          <div class="scope-card-header"><div class="scope-card-title">All Site Photos</div><button class="portal-btn portal-btn-outline" onclick="document.getElementById('sitePhotoUpload').click()" style="font-size:11px; padding:6px 14px;">+ Upload</button><input type="file" id="sitePhotoUpload" accept="image/*" multiple style="display:none" onchange="handleSitePhotoUpload(this.files)"></div>
-          <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Use "Set Before" / "Set After" to assign photos to the comparison slider.</p>
-          <div class="photo-filter-bar">
-            <button class="photo-filter active" onclick="filterSitePhotos('all',this)">All</button>
-            <button class="photo-filter" onclick="filterSitePhotos('riverstone',this)">Riverstone</button>
-            <button class="photo-filter" onclick="filterSitePhotos('bayfront',this)">Bayfront</button>
-            <button class="photo-filter" onclick="filterSitePhotos('shadowood',this)">Shadowood</button>
-            <button class="photo-filter" onclick="filterSitePhotos('estero',this)">Estero</button>
-            <button class="photo-filter" onclick="filterSitePhotos('beach-condo',this)">Beach Condo</button>
-            <button class="photo-filter" onclick="filterSitePhotos('naples-beach',this)">Naples Beach</button>
-            <button class="photo-filter" onclick="filterSitePhotos('banner',this)">Banners</button>
+          <div class="scope-card-header"><div class="scope-card-title">Project Folders</div></div>
+          <p style="font-size:13px; color:var(--text-light); margin-bottom:20px;">Organize photos by project. Click a folder to manage its photos. First photo in each folder becomes the portfolio cover image.</p>
+
+          <!-- Folder List View -->
+          <div id="folderListView">
+            <div class="folder-grid" id="folderGrid"></div>
           </div>
-          <div class="photo-manager-grid" id="sitePhotoGrid">
-            <div class="photo-card" data-album="riverstone"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Riverstone — Living"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Entry"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Living Room"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Kitchen"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="shadowood"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Shadowood — Kitchen"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="estero"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Estero — Remodel"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/b911d9d7089a4042_9-4721/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Bedroom"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/1da143cd089a404e_9-4727/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Dining"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/2b31dae3089b7f14_14-9021/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — View 2"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/4881299d0f3668bc_14-9415/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Exterior"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="naples-beach"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/2e2101480f9b09cd_6110-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Naples Beach Condo"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="beach-condo"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Beach Condo Rentals"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/a53193d008934de1_0327-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 1"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/bb618b92089dbc64_5887-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 2"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/0961be1308934ddc_1477-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 3"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/89e18a5208934dde_1658-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 4"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/fde1f7c808934de0_1477-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 5"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
-            <div class="photo-upload-zone" id="sitePhotoDropZone"><span style="font-size:32px; opacity:0.35;">+</span><strong>Drop photos</strong><input type="file" accept="image/*" multiple onchange="handleSitePhotoUpload(this.files)"></div>
+
+          <!-- Folder Detail View (hidden by default) -->
+          <div id="folderDetailView" style="display:none;">
+            <button class="folder-back" onclick="closeFolderDetail()">← Back to All Folders</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+              <div><h3 style="font-family:var(--font-display); font-size:24px; color:var(--charcoal);" id="folderDetailTitle"></h3><div style="font-size:12px; color:var(--text-light); margin-top:2px;" id="folderDetailCount"></div></div>
+              <div style="display:flex; gap:8px;">
+                <button class="portal-btn portal-btn-outline" onclick="document.getElementById('folderPhotoUpload').click()" style="font-size:11px; padding:6px 14px;">+ Upload Photos</button>
+                <input type="file" id="folderPhotoUpload" accept="image/*" multiple style="display:none" onchange="uploadToCurrentFolder(this.files)">
+              </div>
+            </div>
+            <div class="photo-manager-grid" id="folderPhotoGrid"></div>
           </div>
         </div>
       </div>
@@ -1746,16 +1734,9 @@ function applyHeroChanges() {
     setTimeout(() => { btn.textContent = 'Save & Apply'; btn.style.background = ''; }, 2500);
   }
 }
-let currentSiteFilter = 'all';
-function filterSitePhotos(album, btn) {
-  currentSiteFilter = album;
-  document.querySelectorAll('#sitePhotoGrid .photo-filter, .dash-panel .photo-filter').forEach(f => f.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#sitePhotoGrid .photo-card').forEach(c => {
-    c.style.display = (album === 'all' || c.dataset.album === album) ? '' : 'none';
-  });
-}
-// Compress image before storing (base64 images are too large for localStorage raw)
+// ===== FOLDER-BASED PHOTO MANAGER =====
+let currentOpenFolder = null;
+
 function compressImage(dataUrl, maxWidth, quality, callback) {
   const img = new Image();
   img.onload = () => {
@@ -1770,122 +1751,199 @@ function compressImage(dataUrl, maxWidth, quality, callback) {
   img.src = dataUrl;
 }
 
-function handleSitePhotoUpload(files) {
-  const albumKey = currentSiteFilter !== 'all' ? currentSiteFilter : 'other';
-  let pending = files.length;
+function renderFolders() {
+  const albums = getSiteAlbums();
+  const grid = document.getElementById('folderGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  albums.forEach((album, i) => {
+    const card = document.createElement('div');
+    card.className = 'folder-card';
+    card.onclick = () => openFolderDetail(album.key);
+    const coverUrl = album.photos.length > 0 ? album.photos[0].url : '';
+    const coverStyle = coverUrl ? 'background-image:url('' + coverUrl + '')' : 'background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--text-light);';
+    card.innerHTML = '<div class="folder-cover" style="' + coverStyle + '">' + (coverUrl ? '' : '📁') + '</div>'
+      + '<div class="folder-name">' + album.name + '</div>'
+      + '<div class="folder-count">' + album.photos.length + ' photo' + (album.photos.length !== 1 ? 's' : '') + ' · ' + album.location + '</div>'
+      + '<button class="folder-delete" onclick="event.stopPropagation();deleteFolder('' + album.key + '')" title="Delete folder">✕</button>';
+    grid.appendChild(card);
+  });
+  // Add new folder card
+  const newCard = document.createElement('div');
+  newCard.className = 'new-folder-card';
+  newCard.onclick = () => addAlbum();
+  newCard.innerHTML = '<span style="font-size:28px; opacity:0.3;">+</span>New Project Folder';
+  grid.appendChild(newCard);
+
+  // Also toggle visibility on portfolio albums
+  const albumList = document.getElementById('albumList');
+  if (albumList) {
+    albumList.innerHTML = '';
+    albums.forEach(a => {
+      const item = document.createElement('div');
+      item.className = 'share-item';
+      item.innerHTML = '<div class="share-item-info"><div class="share-item-name">' + a.name + '</div><div class="share-item-desc">' + a.photos.length + ' photos · ' + a.location + '</div></div><div class="toggle-switch' + (a.visible ? ' on' : '') + '" onclick="toggleAlbumVisibility('' + a.key + '',this)"></div>';
+      albumList.insertBefore(item, null);
+    });
+  }
+}
+
+function openFolderDetail(albumKey) {
+  currentOpenFolder = albumKey;
+  const albums = getSiteAlbums();
+  const album = albums.find(a => a.key === albumKey);
+  if (!album) return;
+  document.getElementById('folderListView').style.display = 'none';
+  document.getElementById('folderDetailView').style.display = 'block';
+  document.getElementById('folderDetailTitle').textContent = album.name;
+  document.getElementById('folderDetailCount').textContent = album.photos.length + ' photos · ' + album.location;
+  // Render photos
+  const grid = document.getElementById('folderPhotoGrid');
+  grid.innerHTML = '';
+  album.photos.forEach((photo, pi) => {
+    const card = document.createElement('div');
+    card.className = 'photo-card'; card.draggable = true; card.dataset.album = albumKey; card.dataset.idx = pi;
+    card.innerHTML = '<div class="photo-card-img" style="background-image:url('' + photo.url + '')"></div>'
+      + '<div class="photo-card-body"><input class="photo-card-label" value="' + photo.label + '" onchange="renameFolderPhoto('' + albumKey + '',' + pi + ',this.value)">'
+      + '<div class="photo-card-actions">'
+      + '<button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button>'
+      + '<button class="photo-action-btn" onclick="setBA('after',this)">Set After</button>'
+      + '<button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button>'
+      + '<button class="photo-action-btn delete" onclick="deleteFolderPhoto('' + albumKey + '',' + pi + ')">Delete</button>'
+      + '</div></div>';
+    setupFolderDrag(card);
+    grid.appendChild(card);
+  });
+  // Add drop zone
+  const dropZone = document.createElement('div');
+  dropZone.className = 'photo-upload-zone';
+  dropZone.id = 'folderDropZone';
+  dropZone.innerHTML = '<span style="font-size:32px; opacity:0.35;">+</span><strong>Drop photos here</strong>or click to browse<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="uploadToCurrentFolder(this.files)">';
+  grid.appendChild(dropZone);
+  // Setup drop zone drag
+  ['dragenter','dragover'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('dragover')));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); uploadToCurrentFolder(e.dataTransfer.files); });
+}
+
+function closeFolderDetail() {
+  currentOpenFolder = null;
+  document.getElementById('folderListView').style.display = 'block';
+  document.getElementById('folderDetailView').style.display = 'none';
+  renderFolders();
+}
+
+function uploadToCurrentFolder(files) {
+  if (!currentOpenFolder) return;
   Array.from(files).forEach(file => {
-    if (!file.type.startsWith('image/')) { pending--; return; }
+    if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = e => {
-      // Compress to max 800px wide, 70% quality (~50-100KB per photo)
       compressImage(e.target.result, 800, 0.7, compressed => {
-        const label = file.name.replace(/\.[^/.]+$/, '');
-        // Add to album data (re-read each time to avoid race conditions)
         const albums = getSiteAlbums();
-        const album = albums.find(a => a.key === albumKey);
+        const album = albums.find(a => a.key === currentOpenFolder);
         if (album) {
-          album.photos.push({ url: compressed, label: label });
+          album.photos.push({ url: compressed, label: file.name.replace(/\.[^/.]+$/, '') });
           saveSiteAlbums(albums);
           renderPortfolio();
+          openFolderDetail(currentOpenFolder); // Refresh the view
         }
-        // Add card to admin grid
-        const grid = document.getElementById('sitePhotoGrid');
-        const dropZone = document.getElementById('sitePhotoDropZone');
-        const card = document.createElement('div');
-        card.className = 'photo-card'; card.draggable = true; card.dataset.album = albumKey;
-        card.innerHTML = '<div class="photo-card-img" style="background-image:url(\''+compressed+'\')"></div><div class="photo-card-body"><input class="photo-card-label" value="'+label+'"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button><button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div>';
-        grid.insertBefore(card, dropZone);
-        setupPhotoDrag(card);
       });
     };
     reader.readAsDataURL(file);
   });
 }
 
-// Photo card drag-to-reorder within albums
-let dragPhotoEl = null;
-function setupPhotoDrag(el) {
-  el.addEventListener('dragstart', () => { dragPhotoEl = el; el.style.opacity = '0.4'; });
-  el.addEventListener('dragend', () => { el.style.opacity = '1'; dragPhotoEl = null; savePhotoOrder(); });
-  el.addEventListener('dragover', e => { e.preventDefault(); });
-  el.addEventListener('drop', e => {
-    e.preventDefault();
-    if (dragPhotoEl && dragPhotoEl !== el && dragPhotoEl.dataset.album === el.dataset.album) {
-      const grid = el.parentNode;
-      const allCards = [...grid.querySelectorAll('.photo-card[data-album="'+el.dataset.album+'"]')];
-      const dragIdx = allCards.indexOf(dragPhotoEl);
-      const dropIdx = allCards.indexOf(el);
-      if (dragIdx < dropIdx) el.parentNode.insertBefore(dragPhotoEl, el.nextSibling);
-      else el.parentNode.insertBefore(dragPhotoEl, el);
-    }
-  });
-}
-function savePhotoOrder() {
-  // Rebuild album photo arrays from current DOM order
-  const albums = getSiteAlbums();
-  albums.forEach(album => {
-    const cards = document.querySelectorAll('#sitePhotoGrid .photo-card[data-album="'+album.key+'"]');
-    if (cards.length > 0) {
-      album.photos = [];
-      cards.forEach(card => {
-        const img = card.querySelector('.photo-card-img');
-        const label = card.querySelector('.photo-card-label');
-        if (img && label) {
-          album.photos.push({
-            url: img.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''),
-            label: label.value
-          });
-        }
-      });
-    }
-  });
-  saveSiteAlbums(albums);
-  renderPortfolio();
-}
-// Setup drag on existing photo cards
-document.querySelectorAll('#sitePhotoGrid .photo-card').forEach(c => { c.draggable = true; setupPhotoDrag(c); });
-function addAlbum() {
-  const name = prompt('Album name (e.g., "Gulf Harbor — Naples"):');
-  if (!name) return;
-  const loc = prompt('Location (e.g., "Naples, FL"):') || '';
-  const key = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  // Add to album data
-  const albums = getSiteAlbums();
-  albums.push({ name: name, location: loc, key: key, visible: true, photos: [] });
-  saveSiteAlbums(albums);
-  // Add to album list UI
-  const list = document.getElementById('albumList');
-  if (list) {
-    const item = document.createElement('div');
-    item.className = 'share-item';
-    item.innerHTML = '<div class="share-item-info"><div class="share-item-name">'+name+'</div><div class="share-item-desc">0 photos</div></div><div class="toggle-switch on" onclick="this.classList.toggle(\'on\')"></div>';
-    list.appendChild(item);
-  }
-  // Add filter button
-  const filterBar = document.querySelector('#dashPanel-sitePhotos .photo-filter-bar');
-  if (filterBar) {
-    const btn = document.createElement('button');
-    btn.className = 'photo-filter';
-    btn.textContent = name;
-    btn.onclick = function() { filterSitePhotos(key, this); };
-    filterBar.appendChild(btn);
-  }
-  renderPortfolio();
-}
-function deleteSitePhoto(btn) {
-  const card = btn.closest('.photo-card');
-  const albumKey = card.dataset.album;
-  const imgUrl = card.querySelector('.photo-card-img').style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '');
-  // Remove from album data
+function deleteFolderPhoto(albumKey, photoIdx) {
   const albums = getSiteAlbums();
   const album = albums.find(a => a.key === albumKey);
   if (album) {
-    album.photos = album.photos.filter(p => p.url !== imgUrl);
+    album.photos.splice(photoIdx, 1);
     saveSiteAlbums(albums);
     renderPortfolio();
+    openFolderDetail(albumKey); // Refresh
   }
-  card.remove();
 }
+
+function renameFolderPhoto(albumKey, photoIdx, newName) {
+  const albums = getSiteAlbums();
+  const album = albums.find(a => a.key === albumKey);
+  if (album && album.photos[photoIdx]) {
+    album.photos[photoIdx].label = newName;
+    saveSiteAlbums(albums);
+  }
+}
+
+function deleteFolder(albumKey) {
+  const albums = getSiteAlbums();
+  const album = albums.find(a => a.key === albumKey);
+  const name = album ? album.name : albumKey;
+  if (!confirm('Delete the folder "' + name + '" and all its photos?')) return;
+  if (!confirm('This cannot be undone. Permanently delete "' + name + '"?')) return;
+  const updated = albums.filter(a => a.key !== albumKey);
+  saveSiteAlbums(updated);
+  renderFolders();
+  renderPortfolio();
+}
+
+function addAlbum() {
+  const name = prompt('Project folder name (e.g., "Gulf Harbor"):');
+  if (!name) return;
+  const loc = prompt('Location (e.g., "Naples, FL"):') || '';
+  const key = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const albums = getSiteAlbums();
+  albums.push({ name: name, location: loc, key: key, visible: true, photos: [] });
+  saveSiteAlbums(albums);
+  renderFolders();
+  renderPortfolio();
+}
+
+function toggleAlbumVisibility(albumKey, el) {
+  el.classList.toggle('on');
+  const albums = getSiteAlbums();
+  const album = albums.find(a => a.key === albumKey);
+  if (album) { album.visible = el.classList.contains('on'); saveSiteAlbums(albums); renderPortfolio(); }
+}
+
+// Folder photo drag-to-reorder
+let folderDragEl = null;
+function setupFolderDrag(el) {
+  el.addEventListener('dragstart', () => { folderDragEl = el; el.style.opacity = '0.4'; });
+  el.addEventListener('dragend', () => { el.style.opacity = '1'; saveFolderPhotoOrder(); folderDragEl = null; });
+  el.addEventListener('dragover', e => e.preventDefault());
+  el.addEventListener('drop', e => {
+    e.preventDefault();
+    if (folderDragEl && folderDragEl !== el) {
+      const grid = el.parentNode;
+      const allCards = [...grid.querySelectorAll('.photo-card')];
+      const di = allCards.indexOf(folderDragEl);
+      const ti = allCards.indexOf(el);
+      if (di < ti) el.parentNode.insertBefore(folderDragEl, el.nextSibling);
+      else el.parentNode.insertBefore(folderDragEl, el);
+    }
+  });
+}
+function saveFolderPhotoOrder() {
+  if (!currentOpenFolder) return;
+  const albums = getSiteAlbums();
+  const album = albums.find(a => a.key === currentOpenFolder);
+  if (!album) return;
+  const cards = document.querySelectorAll('#folderPhotoGrid .photo-card');
+  album.photos = [];
+  cards.forEach(card => {
+    const img = card.querySelector('.photo-card-img');
+    const label = card.querySelector('.photo-card-label');
+    if (img && label) {
+      album.photos.push({ url: img.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''), label: label.value });
+    }
+  });
+  saveSiteAlbums(albums);
+  renderPortfolio();
+}
+
+// Initialize folders on load
+renderFolders();
+
 function openProject(idx) {
   activeProject = idx;
   document.getElementById('projectDashboard').style.display = 'none';
@@ -2126,15 +2184,6 @@ function addToHero(btn) {
   setTimeout(() => { btn.textContent = '+ Hero'; btn.style.background = ''; btn.style.color = ''; }, 1500);
   saveHeroState();
 }
-function deleteSitePhoto(btn) {
-  btn.closest('.photo-card').remove();
-  savePortfolioPhotos();
-}
-function savePhotoChanges() {
-  const btn = event.target;
-  btn.textContent = 'Saved ✓'; btn.style.background = 'var(--olive)';
-  setTimeout(() => { btn.textContent = 'Save Changes'; btn.style.background = ''; }, 2000);
-}
 
 // User management
 function addUser() {
@@ -2165,12 +2214,6 @@ if (pDZ) {
   ['dragenter','dragover'].forEach(e => pDZ.addEventListener(e, ev => { ev.preventDefault(); pDZ.classList.add('dragover'); }));
   ['dragleave','drop'].forEach(e => pDZ.addEventListener(e, () => pDZ.classList.remove('dragover')));
   pDZ.addEventListener('drop', e => { e.preventDefault(); handlePhotoUpload(e.dataTransfer.files); });
-}
-const sDZ = document.getElementById('sitePhotoDropZone');
-if (sDZ) {
-  ['dragenter','dragover'].forEach(e => sDZ.addEventListener(e, ev => { ev.preventDefault(); sDZ.classList.add('dragover'); }));
-  ['dragleave','drop'].forEach(e => sDZ.addEventListener(e, () => sDZ.classList.remove('dragover')));
-  sDZ.addEventListener('drop', e => { e.preventDefault(); handleSitePhotoUpload(e.dataTransfer.files); });
 }
 
 
