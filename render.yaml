@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: stoneburner-interior-designs
+    runtime: static
+    buildCommand: echo "Static site - no build needed"
+    staticPublishPath: .
+    envVars: []
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
