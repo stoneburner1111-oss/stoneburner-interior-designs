@@ -1283,7 +1283,7 @@
           </div>
           <div style="display:flex;gap:8px;margin-bottom:20px;padding:14px 18px;background:white;border:1px solid #E8DFD0;border-radius:8px;">
             <span style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6E6E6E;display:flex;align-items:center;white-space:nowrap;">Paste URL:</span>
-            <input type="text" id="boardUrlInput" placeholder="Paste product image URL here and press Enter..." style="flex:1;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:#FAFAF6;" onkeydown="if(event.key==='Enter')addImageFromActiveRoom()">
+            <input type="text" id="boardUrlInput" placeholder="Paste image URL here (right-click image on any site > Copy Image Address)..." style="flex:1;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:#FAFAF6;" onkeydown="if(event.key==='Enter')addImageFromActiveRoom()">
             <button class="portal-btn" onclick="addImageFromActiveRoom()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Add to Board</button>
           </div>
           <div id="roomBoards">
@@ -2231,7 +2231,27 @@ function addUrlImageToBoard(url, label, roomIdx) {
   var item = document.createElement('div');
   item.className = 'board-item';
   item.draggable = true;
-  item.innerHTML = '<div class="board-item-inner" style="background-image:url(' + "'" + url + "'" + ')"></div><div class="board-item-label">' + label + '</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">x</button>';
+  var inner = document.createElement('div');
+  inner.className = 'board-item-inner';
+  inner.style.padding = '0';
+  inner.style.overflow = 'hidden';
+  var img = document.createElement('img');
+  img.src = url;
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+  img.onerror = function() {
+    inner.style.background = 'linear-gradient(135deg,#D4C4A0,#BFA67A)';
+    inner.style.padding = '20px';
+    inner.style.flexDirection = 'column';
+    inner.style.gap = '8px';
+    var domain = '';
+    try { domain = new URL(url).hostname.replace('www.',''); } catch(e) { domain = url.substring(0,30); }
+    inner.innerHTML = '<span style="font-size:24px;">&#128279;</span><span style="font-size:11px;color:white;word-break:break-all;">' + domain + '</span>';
+    inner.style.cursor = 'pointer';
+    inner.onclick = function() { window.open(url, '_blank'); };
+  };
+  inner.appendChild(img);
+  item.appendChild(inner);
+  item.innerHTML += '<div class="board-item-label">' + label + '</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">x</button>';
   board.insertBefore(item, dropZone);
 }
 
