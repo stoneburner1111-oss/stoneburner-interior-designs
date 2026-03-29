@@ -1761,11 +1761,11 @@ function renderFolders() {
     card.className = 'folder-card';
     card.onclick = () => openFolderDetail(album.key);
     const coverUrl = album.photos.length > 0 ? album.photos[0].url : '';
-    const coverStyle = coverUrl ? 'background-image:url('' + coverUrl + '')' : 'background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--text-light);';
+    const coverStyle = coverUrl ? "background-image:url('" + coverUrl + "')" : 'background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--text-light);';
     card.innerHTML = '<div class="folder-cover" style="' + coverStyle + '">' + (coverUrl ? '' : '📁') + '</div>'
       + '<div class="folder-name">' + album.name + '</div>'
       + '<div class="folder-count">' + album.photos.length + ' photo' + (album.photos.length !== 1 ? 's' : '') + ' · ' + album.location + '</div>'
-      + '<button class="folder-delete" onclick="event.stopPropagation();deleteFolder('' + album.key + '')" title="Delete folder">✕</button>';
+      + '<button class="folder-delete" onclick="event.stopPropagation();deleteFolder(\'' + album.key + '\')" title="Delete folder">✕</button>';
     grid.appendChild(card);
   });
   // Add new folder card
@@ -1782,7 +1782,7 @@ function renderFolders() {
     albums.forEach(a => {
       const item = document.createElement('div');
       item.className = 'share-item';
-      item.innerHTML = '<div class="share-item-info"><div class="share-item-name">' + a.name + '</div><div class="share-item-desc">' + a.photos.length + ' photos · ' + a.location + '</div></div><div class="toggle-switch' + (a.visible ? ' on' : '') + '" onclick="toggleAlbumVisibility('' + a.key + '',this)"></div>';
+      item.innerHTML = '<div class="share-item-info"><div class="share-item-name">' + a.name + '</div><div class="share-item-desc">' + a.photos.length + ' photos · ' + a.location + '</div></div><div class="toggle-switch' + (a.visible ? ' on' : '') + '" onclick="toggleAlbumVisibility(\'' + a.key + '\',this)"></div>';
       albumList.insertBefore(item, null);
     });
   }
@@ -1803,13 +1803,13 @@ function openFolderDetail(albumKey) {
   album.photos.forEach((photo, pi) => {
     const card = document.createElement('div');
     card.className = 'photo-card'; card.draggable = true; card.dataset.album = albumKey; card.dataset.idx = pi;
-    card.innerHTML = '<div class="photo-card-img" style="background-image:url('' + photo.url + '')"></div>'
-      + '<div class="photo-card-body"><input class="photo-card-label" value="' + photo.label + '" onchange="renameFolderPhoto('' + albumKey + '',' + pi + ',this.value)">'
+    card.innerHTML = '<div class="photo-card-img" style="background-image:url(\'' + photo.url + '\')"></div>'
+      + '<div class="photo-card-body"><input class="photo-card-label" value="' + photo.label + '" onchange="renameFolderPhoto(\'' + albumKey + '\',' + pi + ',this.value)">'
       + '<div class="photo-card-actions">'
-      + '<button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button>'
-      + '<button class="photo-action-btn" onclick="setBA('after',this)">Set After</button>'
+      + '<button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button>'
+      + '<button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button>'
       + '<button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button>'
-      + '<button class="photo-action-btn delete" onclick="deleteFolderPhoto('' + albumKey + '',' + pi + ')">Delete</button>'
+      + '<button class="photo-action-btn delete" onclick="deleteFolderPhoto(\'' + albumKey + '\',' + pi + ')">Delete</button>'
       + '</div></div>';
     setupFolderDrag(card);
     grid.appendChild(card);
