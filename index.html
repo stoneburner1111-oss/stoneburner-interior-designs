@@ -2192,36 +2192,38 @@ function handleRoomUpload(files, roomIdx) {
 var pasteZone = document.getElementById('pasteZone');
 if (pasteZone) {
   pasteZone.addEventListener('paste', function(e) {
-    e.preventDefault();
     var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
     var activeIdx = 0;
     tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
-    var items = e.clipboardData.items;
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf('image') !== -1) {
-        var file = items[i].getAsFile();
-        var reader = new FileReader();
-        reader.onload = function(ev) {
-          addUrlImageToBoard(ev.target.result, 'Pasted Image', activeIdx);
-          pasteZone.innerHTML = 'Image added! Paste another or click here again.';
-          setTimeout(function() { pasteZone.innerHTML = 'Click here then Cmd+V to paste an image'; }, 2000);
-        };
-        reader.readAsDataURL(file);
-        return;
-      }
-      if (items[i].type === 'text/plain') {
-        items[i].getAsString(function(text) {
-          text = text.trim();
-          if (text.match(/^https?:\/\//)) {
-            var label = text.split('/').pop().split('?')[0].substring(0, 40) || 'Pasted Link';
-            addUrlImageToBoard(text, label, activeIdx);
-            pasteZone.innerHTML = 'Link added! Paste another or click here again.';
-            setTimeout(function() { pasteZone.innerHTML = 'Click here then Cmd+V to paste an image'; }, 2000);
+    // Let the paste happen naturally first
+    setTimeout(function() {
+      // Check if an image was pasted into the contentEditable
+      var imgs = pasteZone.querySelectorAll('img');
+      if (imgs.length > 0) {
+        imgs.forEach(function(img) {
+          if (img.src.startsWith('data:')) {
+            addUrlImageToBoard(img.src, 'Pasted Image', activeIdx);
+          } else {
+            addUrlImageToBoard(img.src, img.src.split('/').pop().substring(0,30), activeIdx);
           }
         });
+        pasteZone.innerHTML = 'Added! Paste another...';
+        setTimeout(function() { pasteZone.innerHTML = 'Click here, then Cmd+V to paste an image'; }, 2000);
         return;
       }
-    }
+      // Check for pasted text (URL)
+      var text = pasteZone.textContent.trim();
+      if (text.match(/^https?:\/\//)) {
+        addUrlImageToBoard(text, text.split('/').pop().split('?')[0].substring(0,30), activeIdx);
+        pasteZone.innerHTML = 'Added! Paste another...';
+        setTimeout(function() { pasteZone.innerHTML = 'Click here, then Cmd+V to paste an image'; }, 2000);
+        return;
+      }
+      // Nothing useful pasted
+      if (pasteZone.textContent === 'Click here, then Cmd+V to paste an image') return;
+      pasteZone.innerHTML = 'Could not read image. Try: Save Image As, then Upload.';
+      setTimeout(function() { pasteZone.innerHTML = 'Click here, then Cmd+V to paste an image'; }, 3000);
+    }, 100);
   });
 }
 function uploadToActiveRoom(files) {
