@@ -1132,7 +1132,7 @@
 
         <!-- HERO SLIDES -->
         <div class="scope-card" style="margin-bottom:20px;">
-          <div class="scope-card-header"><div class="scope-card-title">Hero Slides — Landing Page</div><span class="scope-status status-active">Live</span></div>
+          <div class="scope-card-header"><div class="scope-card-title">Hero Slides — Landing Page</div><button class="portal-btn" onclick="applyHeroChanges()" id="heroSaveBtn" style="font-size:11px; padding:8px 18px;">Save & Apply</button></div>
           <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Control which photos rotate on the main landing page and how zoomed in they appear.</p>
           <div id="heroSlideManager" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:16px;">
             <div class="photo-card" data-hero="0">
@@ -1176,7 +1176,7 @@
 
         <!-- BEFORE & AFTER -->
         <div class="scope-card" style="margin-bottom:20px;">
-          <div class="scope-card-header"><div class="scope-card-title">Before & After Slider</div><span class="scope-status status-active">Live</span></div>
+          <div class="scope-card-header"><div class="scope-card-title">Before & After Slider</div><button class="portal-btn" onclick="applyBAChanges()" id="baSaveBtn" style="font-size:11px; padding:8px 18px;">Save & Apply</button></div>
           <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Set the photos for the public site before/after comparison slider.</p>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
             <div><div class="scope-detail-label" style="margin-bottom:8px;">Before Photo</div><div id="baBeforePreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg'); border:2px solid var(--sand);"></div></div>
@@ -1713,7 +1713,6 @@ function updateHeroZoom(slideIdx, val) {
   if (allSlides[slideIdx]) {
     const scale = val / 100;
     allSlides[slideIdx].dataset.zoom = scale;
-    // Always apply transform so it's ready when slide becomes active
     allSlides[slideIdx].style.transform = 'scale(' + scale + ')';
   }
   const cards = document.querySelectorAll('[data-hero]');
@@ -1721,7 +1720,31 @@ function updateHeroZoom(slideIdx, val) {
     const label = cards[slideIdx].querySelector('.hero-zoom-val');
     if (label) label.textContent = val + '%';
   }
+  // Mark unsaved
+  const btn = document.getElementById('heroSaveBtn');
+  if (btn) { btn.textContent = 'Save & Apply ●'; btn.style.background = 'var(--terracotta)'; }
+}
+function applyHeroChanges() {
+  // Save hero state to localStorage
   saveHeroState();
+  // Force re-read and apply to all slides
+  const savedHero = JSON.parse(localStorage.getItem('sid_heroSlides') || '[]');
+  const allSlides = document.querySelectorAll('.hero-slide');
+  allSlides.forEach((slide, i) => {
+    if (savedHero[i]) {
+      slide.dataset.zoom = savedHero[i].zoom;
+      if (slide.classList.contains('active')) {
+        slide.style.transform = 'scale(' + savedHero[i].zoom + ')';
+      }
+    }
+  });
+  // Visual confirmation
+  const btn = document.getElementById('heroSaveBtn');
+  if (btn) {
+    btn.textContent = '✓ Saved & Applied';
+    btn.style.background = 'var(--olive)';
+    setTimeout(() => { btn.textContent = 'Save & Apply'; btn.style.background = ''; }, 2500);
+  }
 }
 let currentSiteFilter = 'all';
 function filterSitePhotos(album, btn) {
@@ -2055,7 +2078,18 @@ function setBA(slot, btn) {
   }
   btn.textContent = '✓ Set'; btn.style.background = 'var(--olive)'; btn.style.color = 'white';
   setTimeout(() => { btn.textContent = slot === 'before' ? 'Set Before' : 'Set After'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+  // Mark unsaved
+  const baBtn = document.getElementById('baSaveBtn');
+  if (baBtn) { baBtn.textContent = 'Save & Apply ●'; baBtn.style.background = 'var(--terracotta)'; }
+}
+function applyBAChanges() {
   saveBAState();
+  const btn = document.getElementById('baSaveBtn');
+  if (btn) {
+    btn.textContent = '✓ Saved & Applied';
+    btn.style.background = 'var(--olive)';
+    setTimeout(() => { btn.textContent = 'Save & Apply'; btn.style.background = ''; }, 2500);
+  }
 }
 function addToHero(btn) {
   const card = btn.closest('.photo-card');
@@ -2254,7 +2288,7 @@ loadSavedState();
 
 // ===== SMOOTH SCROLL =====
 document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  a.addEventListener('click', e => { const href = a.getAttribute('href'); if (href === '#' || href.length < 2) return; e.preventDefault(); const t = document.querySelector(href); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 });
 </script>
 </body>
