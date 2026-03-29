@@ -1443,7 +1443,7 @@ ACTION ITEMS:
 
 <script>
 // ===== HERO SLIDER =====
-const slides = document.querySelectorAll('.hero-slide');
+let slides = document.querySelectorAll('.hero-slide');
 const indicatorsContainer = document.getElementById('heroIndicators');
 let currentSlide = 0;
 slides.forEach((_, i) => {
@@ -1453,16 +1453,21 @@ slides.forEach((_, i) => {
   indicatorsContainer.appendChild(dot);
 });
 function goToSlide(n) {
-  slides[currentSlide].classList.remove('active');
-  slides[currentSlide].style.transform = 'scale(1)';
-  document.querySelectorAll('.hero-dot')[currentSlide].classList.remove('active');
-  currentSlide = n;
+  slides = document.querySelectorAll('.hero-slide');
+  if (slides.length === 0) return;
+  if (currentSlide < slides.length) {
+    slides[currentSlide].classList.remove('active');
+    slides[currentSlide].style.transform = 'scale(1)';
+  }
+  document.querySelectorAll('.hero-dot').forEach(d => d.classList.remove('active'));
+  currentSlide = n % slides.length;
   const zoom = slides[currentSlide].dataset.zoom || 1.02;
   slides[currentSlide].style.transform = 'scale(' + zoom + ')';
   slides[currentSlide].classList.add('active');
-  document.querySelectorAll('.hero-dot')[currentSlide].classList.add('active');
+  const dots = document.querySelectorAll('.hero-dot');
+  if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 }
-setInterval(() => goToSlide((currentSlide + 1) % slides.length), 5500);
+setInterval(() => { slides = document.querySelectorAll('.hero-slide'); if (slides.length > 0) goToSlide((currentSlide + 1) % slides.length); }, 5500);
 
 // ===== NAV SCROLL =====
 window.addEventListener('scroll', () => {
@@ -1609,7 +1614,6 @@ function updateHeroZoom(slideIdx, val) {
   if (slides[slideIdx]) {
     const scale = val / 100;
     slides[slideIdx].dataset.zoom = scale;
-    // If this slide is currently active, apply immediately
     if (slides[slideIdx].classList.contains('active')) {
       slides[slideIdx].style.transform = 'scale(' + scale + ')';
     }
@@ -1619,6 +1623,7 @@ function updateHeroZoom(slideIdx, val) {
     const label = cards[slideIdx].querySelector('.hero-zoom-val');
     if (label) label.textContent = val + '%';
   }
+  saveHeroState();
 }
 let currentSiteFilter = 'all';
 function filterSitePhotos(album, btn) {
@@ -1844,6 +1849,7 @@ function setBA(slot, btn) {
   }
   btn.textContent = '✓ Set'; btn.style.background = 'var(--olive)'; btn.style.color = 'white';
   setTimeout(() => { btn.textContent = slot === 'before' ? 'Set Before' : 'Set After'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+  saveBAState();
 }
 function addToHero(btn) {
   const card = btn.closest('.photo-card');
@@ -1878,6 +1884,7 @@ function addToHero(btn) {
   // Feedback
   btn.textContent = '✓ Added'; btn.style.background = 'var(--olive)'; btn.style.color = 'white';
   setTimeout(() => { btn.textContent = '+ Hero'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+  saveHeroState();
 }
 function savePhotoChanges() {
   const btn = event.target;
@@ -1922,6 +1929,116 @@ if (sDZ) {
   sDZ.addEventListener('drop', e => { e.preventDefault(); handleSitePhotoUpload(e.dataTransfer.files); });
 }
 
+
+// ===== PERSISTENCE (localStorage) =====
+function saveHeroState() {
+  try {
+    const heroSlides = [];
+    document.querySelectorAll('.hero-slide').forEach(slide => {
+      heroSlides.push({
+        url: slide.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''),
+        zoom: slide.dataset.zoom || 1.02
+      });
+    });
+    localStorage.setItem('sid_heroSlides', JSON.stringify(heroSlides));
+  } catch(e) {}
+}
+function saveBAState() {
+  try {
+    const before = document.getElementById('baBefore');
+    const after = document.getElementById('baAfter');
+    if (before && after) {
+      localStorage.setItem('sid_baBefore', before.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''));
+      localStorage.setItem('sid_baAfter', after.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''));
+    }
+  } catch(e) {}
+}
+function loadSavedState() {
+  try {
+    // Load hero slides
+    const savedHero = localStorage.getItem('sid_heroSlides');
+    if (savedHero) {
+      const heroData = JSON.parse(savedHero);
+      const slideshow = document.querySelector('.hero-slideshow');
+      const award = slideshow.querySelector('.hero-award-float');
+      // Remove existing slides
+      document.querySelectorAll('.hero-slide').forEach(s => s.remove());
+      // Rebuild slides from saved data
+      heroData.forEach((s, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'hero-slide' + (i === 0 ? ' active' : '');
+        slide.style.backgroundImage = "url('" + s.url + "')";
+        slide.style.backgroundSize = 'cover';
+        slide.style.backgroundPosition = 'center';
+        slide.dataset.zoom = s.zoom;
+        if (i === 0) slide.style.transform = 'scale(' + s.zoom + ')';
+        slideshow.insertBefore(slide, award);
+      });
+      // Rebuild indicators
+      const indicators = document.getElementById('heroIndicators');
+      indicators.innerHTML = '';
+      heroData.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => goToSlide(i);
+        indicators.appendChild(dot);
+      });
+      // Rebuild hero manager cards
+      const manager = document.getElementById('heroSlideManager');
+      if (manager) {
+        manager.innerHTML = '';
+        heroData.forEach((s, i) => {
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.dataset.hero = i;
+          const zoomPct = Math.round(s.zoom * 100);
+          card.innerHTML = '<div class="photo-card-img" style="background-image:url(\'' + s.url + '\')"></div><div class="photo-card-body"><input class="photo-card-label" value="Hero Slide ' + (i+1) + '"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light); letter-spacing:1px;">ZOOM:</label><input type="range" min="100" max="140" value="' + zoomPct + '" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(' + i + ',this.value)" oninput="updateHeroZoom(' + i + ',this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light); min-width:35px;">' + zoomPct + '%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">● Slide ' + (i+1) + '</span><button class="photo-action-btn delete" onclick="this.closest(\'.photo-card\').remove();removeHeroSlide(' + i + ')">Remove</button></div></div>';
+          manager.appendChild(card);
+        });
+      }
+      // Update global slides reference
+      currentSlide = 0;
+    }
+
+    // Load B&A photos
+    const savedBefore = localStorage.getItem('sid_baBefore');
+    const savedAfter = localStorage.getItem('sid_baAfter');
+    if (savedBefore) {
+      const baBefore = document.getElementById('baBefore');
+      if (baBefore) baBefore.style.backgroundImage = "url('" + savedBefore + "')";
+      const preview = document.getElementById('baBeforePreview');
+      if (preview) preview.style.backgroundImage = "url('" + savedBefore + "')";
+    }
+    if (savedAfter) {
+      const baAfter = document.getElementById('baAfter');
+      if (baAfter) baAfter.style.backgroundImage = "url('" + savedAfter + "')";
+      const preview = document.getElementById('baAfterPreview');
+      if (preview) preview.style.backgroundImage = "url('" + savedAfter + "')";
+    }
+  } catch(e) { console.log('Load state error:', e); }
+}
+function removeHeroSlide(idx) {
+  const slides = document.querySelectorAll('.hero-slide');
+  if (slides[idx]) slides[idx].remove();
+  if (currentSlide >= document.querySelectorAll('.hero-slide').length) currentSlide = 0;
+  const remaining = document.querySelectorAll('.hero-slide');
+  if (remaining.length > 0 && !document.querySelector('.hero-slide.active')) {
+    remaining[0].classList.add('active');
+  }
+  // Rebuild indicators
+  const indicators = document.getElementById('heroIndicators');
+  indicators.innerHTML = '';
+  remaining.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'hero-dot' + (i === currentSlide ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    indicators.appendChild(dot);
+  });
+  saveHeroState();
+}
+
+// Load saved state on page load
+loadSavedState();
 
 // ===== SMOOTH SCROLL =====
 document.querySelectorAll('a[href^="#"]').forEach(a => {
