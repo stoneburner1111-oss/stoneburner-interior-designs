@@ -2201,10 +2201,25 @@ if (pasteZone) {
       var imgs = pasteZone.querySelectorAll('img');
       if (imgs.length > 0) {
         imgs.forEach(function(img) {
-          if (img.src.startsWith('data:')) {
-            addUrlImageToBoard(img.src, 'Pasted Image', activeIdx);
+          // Convert to data URL via canvas to avoid blob/cors issues
+          var cvs = document.createElement('canvas');
+          var tryConvert = function() {
+            try {
+              cvs.width = img.naturalWidth || img.width || 400;
+              cvs.height = img.naturalHeight || img.height || 300;
+              var ctx = cvs.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              var dataUrl = cvs.toDataURL('image/jpeg', 0.85);
+              addUrlImageToBoard(dataUrl, 'Pasted Image', activeIdx);
+            } catch(e) {
+              // Canvas tainted - use src directly
+              addUrlImageToBoard(img.src, 'Pasted Image', activeIdx);
+            }
+          };
+          if (img.complete) {
+            tryConvert();
           } else {
-            addUrlImageToBoard(img.src, img.src.split('/').pop().substring(0,30), activeIdx);
+            img.onload = tryConvert;
           }
         });
         pasteZone.innerHTML = 'Added! Paste another...';
