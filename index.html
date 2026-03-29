@@ -1308,7 +1308,7 @@
         </div>
         <!-- SCOPE TAB -->
         <div class="portal-tab" id="tab-scope" style="display:none;">
-          <div class="portal-main-header"><h2 class="portal-main-title">Scope of Work</h2><button class="portal-btn portal-btn-outline" onclick="addScopeItem()">+ Add Item</button></div>
+          <div class="portal-main-header"><h2 class="portal-main-title">Scope of Work</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline" onclick="addScopeItem()">+ Add Item</button><button class="portal-btn portal-btn-outline" onclick="clearScope()" style="color:#C44;">Clear All</button></div></div>
           <div class="scope-card">
             <div class="scope-card-header"><div class="scope-card-title">Kitchen Remodel</div><span class="scope-status status-active">In Progress</span></div>
             <div class="scope-checklist" id="scopeChecklist">
@@ -1325,7 +1325,7 @@
         </div>
         <!-- NOTES TAB -->
         <div class="portal-tab" id="tab-notes" style="display:none;">
-          <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><button class="portal-btn portal-btn-outline">Export to PDF</button></div>
+          <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline">Export to PDF</button><button class="portal-btn portal-btn-outline" onclick="clearNotes()" style="color:#C44;">Clear All</button></div></div>
           <div class="notes-area">
             <div class="notes-toolbar"><button class="notes-tool-btn"><b>B</b></button><button class="notes-tool-btn"><i>I</i></button><button class="notes-tool-btn"><u>U</u></button><button class="notes-tool-btn">☰</button></div>
             <textarea class="notes-textarea">Henderson Kitchen — Meeting Notes (3/25/26)
@@ -1648,10 +1648,13 @@ let portalUsers = [
   { name: 'Beth', user: 'beth', pass: 'design2026', role: 'designer', admin: false }
 ];
 
-let projects = [
+let defaultProjects = [
   { name: 'Henderson Kitchen Remodel', client: 'Henderson Residence', location: 'Fort Myers', type: 'Kitchen Remodel', status: 'In Progress', img: 'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg', rooms: ['Kitchen','Living Room','Master Bath'], budget: 45000 },
   { name: 'Bayshore Condo', client: 'Bayshore', location: 'Naples', type: 'Full Home Design', status: 'Design Phase', img: 'https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg', rooms: ['Living Room','Bedroom'], budget: 22000 }
 ];
+function getProjects() { try { var s = localStorage.getItem('sid_projects'); if (s) return JSON.parse(s); } catch(e) {} return defaultProjects; }
+function saveProjects() { try { localStorage.setItem('sid_projects', JSON.stringify(projects)); } catch(e) {} }
+var projects = getProjects();
 
 function openPortal() {
   document.getElementById('portal').classList.add('active');
@@ -2109,6 +2112,7 @@ function createProject() {
   if (!name) return;
   const idx = projects.length;
   projects.push({ name, client, location, type, status: 'New', img: '', rooms: ['Room 1'], budget: 0 });
+  saveProjects();
   const card = document.createElement('div');
   card.className = 'proj-card';
   card.dataset.projIdx = idx;
@@ -2128,6 +2132,7 @@ function deleteProject(idx, btn) {
   if (!confirm('This cannot be undone. Delete "' + name + '" permanently?')) return;
   // Remove from array
   projects[idx] = null;
+  saveProjects();
   // Remove card from DOM
   const card = btn.closest('.proj-card');
   if (card) card.remove();
@@ -2313,6 +2318,16 @@ function handleCondUpload(files) {
 }
 
 // Scope
+function clearScope() {
+  if (!confirm('Clear all scope items? This cannot be undone.')) return;
+  var list = document.getElementById('scopeChecklist');
+  if (list) list.innerHTML = '';
+}
+function clearNotes() {
+  if (!confirm('Clear all notes? This cannot be undone.')) return;
+  var ta = document.querySelector('.notes-textarea');
+  if (ta) ta.value = '';
+}
 function addScopeItem() {
   const text = prompt('Scope item:');
   if (!text) return;
