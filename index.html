@@ -1285,7 +1285,11 @@
             <div class="room-board active">
               <div class="vision-board"><div class="board-items" id="boardItems-0">
                 <div class="board-item" draggable="true"><div class="board-item-inner" style="background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div><div class="board-item-label">Kitchen Inspiration</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
-                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
+                <div class="board-url-paste" style="margin-bottom:12px;display:flex;gap:8px;">
+<input type="text" class="link-paste-input" placeholder="Paste image URL or product page URL..." style="flex:1;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;" id="boardUrlInput-0" onkeydown="if(event.key==='Enter')addImageFromUrl(0)">
+<button class="portal-btn portal-btn-outline" onclick="addImageFromUrl(0)" style="font-size:11px;padding:8px 14px;white-space:nowrap;">Add Image</button>
+</div>
+<div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Drop images here</strong>Drag from desktop or other websites<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
               </div></div>
             </div>
             <div class="room-board" style="display:none;">
@@ -2038,6 +2042,39 @@ function saveFolderPhotoOrder() {
   renderPortfolio();
 }
 
+// Enable dragging images from external websites onto vision boards
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.board-drop-zone').forEach(function(zone) {
+    zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      // Check for dragged image URL from another website
+      var html = e.dataTransfer.getData('text/html');
+      var text = e.dataTransfer.getData('text/plain');
+      var imgUrl = '';
+      if (html) {
+        var match = html.match(/src=["']([^"']+)["']/);
+        if (match) imgUrl = match[1];
+      }
+      if (!imgUrl && text && text.match(/^https?:.*\.(jpg|jpeg|png|gif|webp|svg)/i)) {
+        imgUrl = text;
+      }
+      if (!imgUrl && text && text.match(/^https?:/)) {
+        imgUrl = text;
+      }
+      if (imgUrl) {
+        var boardItems = zone.closest('.board-items');
+        if (boardItems) {
+          var roomIdx = boardItems.id.replace('boardItems-','');
+          addUrlImageToBoard(imgUrl, imgUrl.split('/').pop().split('?')[0].substring(0,30), parseInt(roomIdx) || 0);
+        }
+      }
+    });
+  });
+});
+
 // Initialize folders on load
 renderFolders();
 
@@ -2139,6 +2176,59 @@ function handleRoomUpload(files, roomIdx) {
 }
 
 // Existing conditions upload
+// URL image paste and external drag for vision boards
+function addImageFromUrl(roomIdx) {
+  var input = document.getElementById('boardUrlInput-' + roomIdx);
+  if (!input) return;
+  var url = input.value.trim();
+  if (!url) return;
+  // If it looks like an image URL, use directly
+  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)/i) || url.startsWith('data:')) {
+    addUrlImageToBoard(url, url.split('/').pop().split('?')[0], roomIdx);
+    input.value = '';
+    return;
+  }
+  // Otherwise try loading it as an image anyway (many product images work)
+  var img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    addUrlImageToBoard(url, 'Product Image', roomIdx);
+    input.value = '';
+  };
+  img.onerror = function() {
+    // If direct load fails, still add as a link card
+    addLinkCardToBoard(url, roomIdx);
+    input.value = '';
+  };
+  img.src = url;
+}
+
+function addUrlImageToBoard(url, label, roomIdx) {
+  var board = document.getElementById('boardItems-' + roomIdx);
+  if (!board) return;
+  var dropZone = board.querySelector('.board-drop-zone');
+  var item = document.createElement('div');
+  item.className = 'board-item';
+  item.draggable = true;
+  item.innerHTML = '<div class="board-item-inner" style="background-image:url(' + "'" + url + "'" + ')"></div><div class="board-item-label">' + label + '</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">x</button>';
+  board.insertBefore(item, dropZone);
+}
+
+function addLinkCardToBoard(url, roomIdx) {
+  var board = document.getElementById('boardItems-' + roomIdx);
+  if (!board) return;
+  var dropZone = board.querySelector('.board-drop-zone');
+  var domain = '';
+  try { domain = new URL(url).hostname.replace('www.',''); } catch(e) { domain = url.substring(0,30); }
+  var item = document.createElement('div');
+  item.className = 'board-item';
+  item.draggable = true;
+  item.style.cursor = 'pointer';
+  item.onclick = function() { window.open(url, '_blank'); };
+  item.innerHTML = '<div class="board-item-inner" style="background:linear-gradient(135deg,#D4C4A0,#BFA67A);flex-direction:column;gap:8px;padding:20px;"><span style="font-size:24px;">&#128279;</span><span style="font-size:12px;color:white;word-break:break-all;">' + domain + '</span></div><div class="board-item-label">' + domain + '</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">x</button>';
+  board.insertBefore(item, dropZone);
+}
+
 function handleCondUpload(files) {
   Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
