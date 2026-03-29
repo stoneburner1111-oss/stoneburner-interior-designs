@@ -1281,15 +1281,16 @@
             <button class="room-tab" onclick="switchRoom(2,this)">Master Bath</button>
             <button class="room-tab add-room-btn" onclick="addRoom()">+ Add Room</button>
           </div>
+          <div style="display:flex;gap:8px;margin-bottom:20px;padding:14px 18px;background:white;border:1px solid #E8DFD0;border-radius:8px;">
+            <span style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6E6E6E;display:flex;align-items:center;white-space:nowrap;">Paste URL:</span>
+            <input type="text" id="boardUrlInput" placeholder="Paste product image URL here and press Enter..." style="flex:1;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:#FAFAF6;" onkeydown="if(event.key==='Enter')addImageFromActiveRoom()">
+            <button class="portal-btn" onclick="addImageFromActiveRoom()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Add to Board</button>
+          </div>
           <div id="roomBoards">
             <div class="room-board active">
               <div class="vision-board"><div class="board-items" id="boardItems-0">
                 <div class="board-item" draggable="true"><div class="board-item-inner" style="background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div><div class="board-item-label">Kitchen Inspiration</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
-                <div class="board-url-paste" style="margin-bottom:12px;display:flex;gap:8px;">
-<input type="text" class="link-paste-input" placeholder="Paste image URL or product page URL..." style="flex:1;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;" id="boardUrlInput-0" onkeydown="if(event.key==='Enter')addImageFromUrl(0)">
-<button class="portal-btn portal-btn-outline" onclick="addImageFromUrl(0)" style="font-size:11px;padding:8px 14px;white-space:nowrap;">Add Image</button>
-</div>
-<div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Drop images here</strong>Drag from desktop or other websites<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
+                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
               </div></div>
             </div>
             <div class="room-board" style="display:none;">
@@ -2177,6 +2178,26 @@ function handleRoomUpload(files, roomIdx) {
 
 // Existing conditions upload
 // URL image paste and external drag for vision boards
+function addImageFromActiveRoom() {
+  var input = document.getElementById('boardUrlInput');
+  if (!input || !input.value.trim()) return;
+  // Find active room index
+  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
+  var activeIdx = 0;
+  tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
+  var url = input.value.trim();
+  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)/i) || url.startsWith('data:')) {
+    addUrlImageToBoard(url, url.split('/').pop().split('?')[0], activeIdx);
+  } else {
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() { addUrlImageToBoard(url, 'Product Image', activeIdx); };
+    img.onerror = function() { addLinkCardToBoard(url, activeIdx); };
+    img.src = url;
+  }
+  input.value = '';
+}
+
 function addImageFromUrl(roomIdx) {
   var input = document.getElementById('boardUrlInput-' + roomIdx);
   if (!input) return;
