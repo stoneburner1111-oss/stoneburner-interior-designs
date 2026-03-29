@@ -1787,7 +1787,7 @@ function renderFolders() {
     card.innerHTML = '<div class="folder-cover" style="' + coverStyle + '">' + (coverUrl ? '' : '📁') + '</div>'
       + '<div class="folder-name">' + album.name + '</div>'
       + '<div class="folder-count">' + album.photos.length + ' photo' + (album.photos.length !== 1 ? 's' : '') + ' · ' + album.location + '</div>'
-      + '<button class="folder-delete" onclick="event.stopPropagation();deleteFolder(\'' + album.key + '\')" title="Delete folder">✕</button>';
+      + '<button class="folder-delete" onclick="event.stopPropagation();editFolder(\'' + album.key + '\')" title="Edit folder" style="right:40px;">&#9998;</button><button class="folder-delete" onclick="event.stopPropagation();deleteFolder(\'' + album.key + '\')" title="Delete folder">✕</button>';
     setupFolderCardDrag(card);
     grid.appendChild(card);
   });
@@ -1954,6 +1954,21 @@ function renameFolderPhoto(albumKey, photoIdx, newName) {
     album.photos[photoIdx].label = newName;
     saveSiteAlbums(albums);
   }
+}
+
+function editFolder(albumKey) {
+  var albums = getSiteAlbums();
+  var album = albums.find(function(a) { return a.key === albumKey; });
+  if (!album) return;
+  var newName = prompt('Project name:', album.name);
+  if (!newName) return;
+  var newLoc = prompt('Location:', album.location);
+  if (newLoc === null) return;
+  album.name = newName;
+  album.location = newLoc;
+  saveSiteAlbums(albums);
+  renderFolders();
+  renderPortfolio();
 }
 
 function deleteFolder(albumKey) {
