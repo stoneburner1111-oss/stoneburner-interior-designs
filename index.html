@@ -797,17 +797,41 @@
   }
   .back-dash:hover { color: var(--terracotta-deep); padding-left: 16px; }
 
-  /* ===== LIGHTBOX ===== */
+  /* ===== GALLERY SLIDESHOW ===== */
   .lightbox {
     position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.92);
     display: none; align-items: center; justify-content: center;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); flex-direction: column;
   }
   .lightbox.active { display: flex; }
-  .lightbox img { max-width: 85vw; max-height: 85vh; object-fit: contain; border-radius: 4px; animation: lightboxIn 0.4s ease; }
-  .lightbox-close { position: absolute; top: 24px; right: 32px; width: 48px; height: 48px; border: 1px solid rgba(255,255,255,0.2); background: transparent; border-radius: 50%; cursor: pointer; color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+  .lightbox img { max-width: 85vw; max-height: 75vh; object-fit: contain; border-radius: 4px; animation: lightboxIn 0.4s ease; }
+  .lightbox-close { position: absolute; top: 24px; right: 32px; width: 48px; height: 48px; border: 1px solid rgba(255,255,255,0.2); background: transparent; border-radius: 50%; cursor: pointer; color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10; }
   .lightbox-close:hover { background: white; color: var(--charcoal); }
-  .lightbox-caption { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: white; font-family: var(--font-display); font-size: 22px; text-align: center; }
+  .lightbox-caption { color: white; font-family: var(--font-display); font-size: 22px; text-align: center; margin-top: 20px; }
+  .lightbox-counter { color: rgba(255,255,255,0.4); font-size: 13px; letter-spacing: 2px; margin-top: 6px; }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; z-index: 10;
+  }
+  .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+  .lightbox-prev { left: 24px; }
+  .lightbox-next { right: 24px; }
+  .lightbox-thumbs {
+    display: flex; gap: 8px; margin-top: 16px; max-width: 85vw;
+    overflow-x: auto; padding: 4px 0;
+  }
+  .lightbox-thumb {
+    width: 60px; height: 45px; border-radius: 4px; overflow: hidden;
+    cursor: pointer; border: 2px solid transparent;
+    transition: all 0.3s; flex-shrink: 0; opacity: 0.5;
+    background-size: cover; background-position: center;
+  }
+  .lightbox-thumb.active { border-color: var(--terracotta); opacity: 1; }
+  .lightbox-thumb:hover { opacity: 0.8; }
 
   /* ===== KEYFRAMES ===== */
   @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -947,46 +971,7 @@
     </div>
   </div>
   <div class="portfolio-grid" id="portfolioGrid">
-    <div class="project-card reveal-scale" data-delay="1" onclick="openLightbox('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg','Riverstone — Naples, FL')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Naples, FL</div><div class="project-name">Riverstone</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="2" onclick="openLightbox('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg','Royal Harbor — Naples, FL')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Naples, FL</div><div class="project-name">Royal Harbor</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="3" onclick="openLightbox('https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg','Condo Beach Rentals — Fort Myers Beach')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Fort Myers Beach</div><div class="project-name">Beach Condo Rentals</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="2" onclick="openLightbox('https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg','Bayfront — Fort Myers')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Fort Myers</div><div class="project-name">Bayfront</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="3" onclick="openLightbox('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg','Shadowood Kitchen — Fort Myers')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Fort Myers</div><div class="project-name">Shadowood Kitchen</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="4" onclick="openLightbox('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg','Estero Remodel')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Estero, FL</div><div class="project-name">Estero Remodel</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="3" onclick="openLightbox('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg','Bayfront Living — Fort Myers')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Fort Myers</div><div class="project-name">Bayfront Living</div><div class="project-view">View Project →</div></div>
-    </div>
-    <div class="project-card reveal-scale" data-delay="4" onclick="openLightbox('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg','Bayfront Kitchen — Fort Myers')">
-      <div class="project-img" style="background-image: url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div>
-      <div class="project-overlay"></div>
-      <div class="project-info"><div class="project-location">Fort Myers</div><div class="project-name">Bayfront Kitchen</div><div class="project-view">View Project →</div></div>
-    </div>
+    <!-- Populated dynamically from album data -->
   </div>
 </section>
 
@@ -1072,11 +1057,15 @@
   </div>
 </footer>
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+<!-- GALLERY SLIDESHOW -->
+<div class="lightbox" id="lightbox">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();galleryNav(-1)">←</button>
+  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();galleryNav(1)">→</button>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
   <div class="lightbox-caption" id="lightboxCaption"></div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+  <div class="lightbox-thumbs" id="lightboxThumbs" onclick="event.stopPropagation()"></div>
 </div>
 
 <!-- PORTAL TRIGGER -->
@@ -1521,18 +1510,118 @@ function slideTestimonials(dir) {
   slider.style.transform = `translateX(${testPos}px)`;
 }
 
-// ===== LIGHTBOX =====
-function openLightbox(src, caption) {
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightboxCaption').textContent = caption;
+// ===== ALBUM DATA & PORTFOLIO =====
+const defaultAlbums = [
+  { name: 'Riverstone', location: 'Naples, FL', key: 'riverstone', visible: true, photos: [
+    { url: 'https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg', label: 'Riverstone — Living Room' }
+  ]},
+  { name: 'Royal Harbor', location: 'Naples, FL', key: 'royal-harbor', visible: true, photos: [
+    { url: 'https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg', label: 'Royal Harbor — Kitchen' }
+  ]},
+  { name: 'Beach Condo Rentals', location: 'Fort Myers Beach', key: 'beach-condo', visible: true, photos: [
+    { url: 'https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg', label: 'Beach Condo — Living' }
+  ]},
+  { name: 'Bayfront', location: 'Fort Myers', key: 'bayfront', visible: true, photos: [
+    { url: 'https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg', label: 'Bayfront — Entry' },
+    { url: 'https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg', label: 'Bayfront — Living Room' },
+    { url: 'https://st.hzcdn.com/simgs/b911d9d7089a4042_9-4721/home-design.jpg', label: 'Bayfront — Bedroom' },
+    { url: 'https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg', label: 'Bayfront — Kitchen' },
+    { url: 'https://st.hzcdn.com/simgs/1da143cd089a404e_9-4727/home-design.jpg', label: 'Bayfront — Dining' },
+    { url: 'https://st.hzcdn.com/simgs/2b31dae3089b7f14_14-9021/home-design.jpg', label: 'Bayfront — View 2' },
+    { url: 'https://st.hzcdn.com/simgs/4881299d0f3668bc_14-9415/home-design.jpg', label: 'Bayfront — Exterior' }
+  ]},
+  { name: 'Shadowood Kitchen', location: 'Fort Myers', key: 'shadowood', visible: true, photos: [
+    { url: 'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg', label: 'Shadowood — Kitchen Remodel' }
+  ]},
+  { name: 'Estero Remodel', location: 'Estero, FL', key: 'estero', visible: true, photos: [
+    { url: 'https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg', label: 'Estero — Full Remodel' }
+  ]}
+];
+
+function getSiteAlbums() {
+  try {
+    const saved = localStorage.getItem('sid_albums');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return defaultAlbums;
+}
+function saveSiteAlbums(albums) {
+  try { localStorage.setItem('sid_albums', JSON.stringify(albums)); } catch(e) {}
+}
+function renderPortfolio() {
+  const albums = getSiteAlbums();
+  const grid = document.getElementById('portfolioGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  let delay = 0;
+  albums.forEach((album, ai) => {
+    if (!album.visible || album.photos.length === 0) return;
+    delay++;
+    const card = document.createElement('div');
+    card.className = 'project-card reveal-scale visible';
+    if (delay === 1) { card.style.gridColumn = 'span 2'; card.style.gridRow = 'span 2'; card.style.aspectRatio = 'auto'; }
+    card.onclick = () => openGallery(ai, 0);
+    card.innerHTML = '<div class="project-img" style="background-image:url(\'' + album.photos[0].url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + album.location + '</div><div class="project-name">' + album.name + '</div><div class="project-view">' + album.photos.length + ' Photo' + (album.photos.length > 1 ? 's' : '') + ' — View Project →</div></div>';
+    grid.appendChild(card);
+  });
+}
+
+// ===== GALLERY SLIDESHOW =====
+let galleryAlbumIdx = 0;
+let galleryPhotoIdx = 0;
+function openGallery(albumIdx, photoIdx) {
+  const albums = getSiteAlbums();
+  if (!albums[albumIdx] || !albums[albumIdx].photos[photoIdx]) return;
+  galleryAlbumIdx = albumIdx;
+  galleryPhotoIdx = photoIdx;
+  renderGallerySlide();
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
+function renderGallerySlide() {
+  const albums = getSiteAlbums();
+  const album = albums[galleryAlbumIdx];
+  const photo = album.photos[galleryPhotoIdx];
+  document.getElementById('lightboxImg').src = photo.url;
+  document.getElementById('lightboxCaption').textContent = album.name + ' — ' + photo.label;
+  document.getElementById('lightboxCounter').textContent = (galleryPhotoIdx + 1) + ' / ' + album.photos.length;
+  // Thumbs
+  const thumbs = document.getElementById('lightboxThumbs');
+  thumbs.innerHTML = '';
+  album.photos.forEach((p, i) => {
+    const t = document.createElement('div');
+    t.className = 'lightbox-thumb' + (i === galleryPhotoIdx ? ' active' : '');
+    t.style.backgroundImage = "url('" + p.url + "')";
+    t.onclick = (e) => { e.stopPropagation(); galleryPhotoIdx = i; renderGallerySlide(); };
+    thumbs.appendChild(t);
+  });
+  // Hide arrows if single photo
+  document.querySelector('.lightbox-prev').style.display = album.photos.length > 1 ? 'flex' : 'none';
+  document.querySelector('.lightbox-next').style.display = album.photos.length > 1 ? 'flex' : 'none';
+}
+function galleryNav(dir) {
+  const albums = getSiteAlbums();
+  const total = albums[galleryAlbumIdx].photos.length;
+  galleryPhotoIdx = (galleryPhotoIdx + dir + total) % total;
+  renderGallerySlide();
+}
+function openLightbox(src, caption) { /* legacy compat */ openGallery(0, 0); }
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('active');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+});
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') galleryNav(-1);
+  if (e.key === 'ArrowRight') galleryNav(1);
+});
+
+// Render portfolio on page load
+renderPortfolio();
 
 // ===== PORTAL =====
 let currentRole = null;
@@ -1645,21 +1734,27 @@ function filterSitePhotos(album, btn) {
   });
 }
 function handleSitePhotoUpload(files) {
-  const album = currentSiteFilter !== 'all' ? currentSiteFilter : 'other';
+  const albumKey = currentSiteFilter !== 'all' ? currentSiteFilter : 'other';
+  const albums = getSiteAlbums();
   Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = e => {
+      const label = file.name.replace(/\.[^/.]+$/, '');
+      // Add to album data
+      const album = albums.find(a => a.key === albumKey);
+      if (album) {
+        album.photos.push({ url: e.target.result, label: label });
+        saveSiteAlbums(albums);
+        renderPortfolio();
+      }
+      // Add card to admin grid
       const grid = document.getElementById('sitePhotoGrid');
       const dropZone = document.getElementById('sitePhotoDropZone');
       const card = document.createElement('div');
-      card.className = 'photo-card'; card.dataset.album = album;
-      card.innerHTML = '<div class="photo-card-img" style="background-image:url(\''+e.target.result+'\')"></div><div class="photo-card-body"><input class="photo-card-label" value="'+file.name.replace(/\.[^/.]+$/,'')+'"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button><button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest(\'.photo-card\').remove()">Delete</button></div></div>';
+      card.className = 'photo-card'; card.dataset.album = albumKey;
+      card.innerHTML = '<div class="photo-card-img" style="background-image:url(\''+e.target.result+'\')"></div><div class="photo-card-body"><input class="photo-card-label" value="'+label+'"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button><button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div>';
       grid.insertBefore(card, dropZone);
-      // Also add to public portfolio grid
-      addToPortfolioGrid(e.target.result, file.name.replace(/\.[^/.]+$/,''), '');
-      // Save to localStorage
-      savePortfolioPhotos();
     };
     reader.readAsDataURL(file);
   });
@@ -1667,20 +1762,44 @@ function handleSitePhotoUpload(files) {
 function addAlbum() {
   const name = prompt('Album name (e.g., "Gulf Harbor — Naples"):');
   if (!name) return;
+  const loc = prompt('Location (e.g., "Naples, FL"):') || '';
   const key = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  // Add to album list
+  // Add to album data
+  const albums = getSiteAlbums();
+  albums.push({ name: name, location: loc, key: key, visible: true, photos: [] });
+  saveSiteAlbums(albums);
+  // Add to album list UI
   const list = document.getElementById('albumList');
-  const item = document.createElement('div');
-  item.className = 'share-item';
-  item.innerHTML = '<div class="share-item-info"><div class="share-item-name">'+name+'</div><div class="share-item-desc">0 photos</div></div><div class="toggle-switch on" onclick="this.classList.toggle(\'on\')"></div>';
-  list.appendChild(item);
+  if (list) {
+    const item = document.createElement('div');
+    item.className = 'share-item';
+    item.innerHTML = '<div class="share-item-info"><div class="share-item-name">'+name+'</div><div class="share-item-desc">0 photos</div></div><div class="toggle-switch on" onclick="this.classList.toggle(\'on\')"></div>';
+    list.appendChild(item);
+  }
   // Add filter button
   const filterBar = document.querySelector('#dashPanel-sitePhotos .photo-filter-bar');
-  const btn = document.createElement('button');
-  btn.className = 'photo-filter';
-  btn.textContent = name;
-  btn.onclick = function() { filterSitePhotos(key, this); };
-  filterBar.appendChild(btn);
+  if (filterBar) {
+    const btn = document.createElement('button');
+    btn.className = 'photo-filter';
+    btn.textContent = name;
+    btn.onclick = function() { filterSitePhotos(key, this); };
+    filterBar.appendChild(btn);
+  }
+  renderPortfolio();
+}
+function deleteSitePhoto(btn) {
+  const card = btn.closest('.photo-card');
+  const albumKey = card.dataset.album;
+  const imgUrl = card.querySelector('.photo-card-img').style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '');
+  // Remove from album data
+  const albums = getSiteAlbums();
+  const album = albums.find(a => a.key === albumKey);
+  if (album) {
+    album.photos = album.photos.filter(p => p.url !== imgUrl);
+    saveSiteAlbums(albums);
+    renderPortfolio();
+  }
+  card.remove();
 }
 function openProject(idx) {
   activeProject = idx;
@@ -1982,32 +2101,6 @@ function saveBAState() {
     }
   } catch(e) {}
 }
-function savePortfolioPhotos() {
-  try {
-    const photos = [];
-    document.querySelectorAll('#sitePhotoGrid .photo-card').forEach(card => {
-      const img = card.querySelector('.photo-card-img');
-      const label = card.querySelector('.photo-card-label');
-      if (img && label) {
-        photos.push({
-          url: img.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''),
-          label: label.value,
-          album: card.dataset.album || 'other'
-        });
-      }
-    });
-    localStorage.setItem('sid_portfolioPhotos', JSON.stringify(photos));
-  } catch(e) {}
-}
-function addToPortfolioGrid(url, label, location) {
-  const grid = document.getElementById('portfolioGrid');
-  if (!grid) return;
-  const card = document.createElement('div');
-  card.className = 'project-card reveal-scale visible';
-  card.onclick = () => openLightbox(url, label);
-  card.innerHTML = '<div class="project-img" style="background-image:url(\'' + url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + (location||'') + '</div><div class="project-name">' + label + '</div><div class="project-view">View Project →</div></div>';
-  grid.appendChild(card);
-}
 function loadSavedState() {
   try {
     // Load hero slides
@@ -2050,7 +2143,6 @@ function loadSavedState() {
       currentSlide = 0;
       slides = document.querySelectorAll('.hero-slide');
     } else {
-      // No saved state — apply initial zoom to default slides
       document.querySelectorAll('.hero-slide').forEach(s => { s.dataset.zoom = 1.02; });
       const first = document.querySelector('.hero-slide.active');
       if (first) first.style.transform = 'scale(1.02)';
@@ -2072,21 +2164,7 @@ function loadSavedState() {
       if (p) p.style.backgroundImage = "url('" + savedAfter + "')";
     }
 
-    // Load saved portfolio photos (add any new uploads to public grid)
-    const savedPortfolio = localStorage.getItem('sid_portfolioPhotos');
-    if (savedPortfolio) {
-      const photos = JSON.parse(savedPortfolio);
-      // Check which URLs are already in the default portfolio
-      const existingUrls = new Set();
-      document.querySelectorAll('#portfolioGrid .project-img').forEach(el => {
-        existingUrls.add(el.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''));
-      });
-      photos.forEach(p => {
-        if (!existingUrls.has(p.url) && p.url) {
-          addToPortfolioGrid(p.url, p.label, '');
-        }
-      });
-    }
+    // Portfolio is rendered from album data by renderPortfolio()
   } catch(e) { console.log('Load state error:', e); }
 }
 function removeHeroSlide(idx) {
