@@ -132,7 +132,7 @@
     background-size: cover; background-position: center;
     transform: scale(1);
   }
-  .hero-slide.active { opacity: 1; transform: scale(1.02); }
+  .hero-slide.active { opacity: 1; }
 
   /* Hero slide indicators */
   .hero-indicators {
@@ -687,6 +687,16 @@
   }
   .new-proj-card:hover { border-color: var(--terracotta); background: rgba(196,120,91,0.02); }
   .new-proj-icon { font-size: 36px; opacity: 0.3; }
+  .proj-delete {
+    position: absolute; top: 10px; right: 10px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); color: white; border: none;
+    font-size: 14px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    opacity: 0; transition: all 0.3s; z-index: 2;
+  }
+  .proj-card:hover .proj-delete { opacity: 1; }
+  .proj-delete:hover { background: #C44; }
 
   /* Create Project Modal */
   .modal-bg {
@@ -936,7 +946,7 @@
       <h2 class="portfolio-title reveal" data-delay="1">Featured Projects</h2>
     </div>
   </div>
-  <div class="portfolio-grid">
+  <div class="portfolio-grid" id="portfolioGrid">
     <div class="project-card reveal-scale" data-delay="1" onclick="openLightbox('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg','Riverstone — Naples, FL')">
       <div class="project-img" style="background-image: url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg')"></div>
       <div class="project-overlay"></div>
@@ -1115,12 +1125,12 @@
           <button class="portal-btn admin-only" onclick="showCreateProject()" style="display:none;">+ New Project</button>
         </div>
         <div class="project-cards" id="projectCards">
-          <div class="proj-card" onclick="openProject(0)">
-            <div class="proj-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"><span class="proj-card-status status-active">In Progress</span></div>
+          <div class="proj-card" data-proj-idx="0" onclick="openProject(0)">
+            <div class="proj-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"><span class="proj-card-status status-active">In Progress</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(0,this)" style="display:none;">✕</button></div>
             <div class="proj-card-body"><div class="proj-card-name">Henderson Kitchen Remodel</div><div class="proj-card-client">Henderson Residence · Fort Myers</div><div class="proj-card-meta"><span>4 Rooms</span><span>Budget: $45,000</span></div></div>
           </div>
-          <div class="proj-card" onclick="openProject(1)">
-            <div class="proj-card-img" style="background-image:url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"><span class="proj-card-status status-pending">Design Phase</span></div>
+          <div class="proj-card" data-proj-idx="1" onclick="openProject(1)">
+            <div class="proj-card-img" style="background-image:url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"><span class="proj-card-status status-pending">Design Phase</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(1,this)" style="display:none;">✕</button></div>
             <div class="proj-card-body"><div class="proj-card-name">Bayshore Condo</div><div class="proj-card-client">Bayshore · Naples</div><div class="proj-card-meta"><span>2 Rooms</span><span>Budget: $22,000</span></div></div>
           </div>
           <div class="new-proj-card admin-only" onclick="showCreateProject()" style="display:none;"><span class="new-proj-icon">+</span>Create New Project</div>
@@ -1214,23 +1224,23 @@
             <button class="photo-filter" onclick="filterSitePhotos('banner',this)">Banners</button>
           </div>
           <div class="photo-manager-grid" id="sitePhotoGrid">
-            <div class="photo-card" data-album="riverstone"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Riverstone — Living"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Entry"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Living Room"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Kitchen"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="shadowood"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Shadowood — Kitchen"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="estero"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Estero — Remodel"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/b911d9d7089a4042_9-4721/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Bedroom"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/1da143cd089a404e_9-4727/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Dining"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/2b31dae3089b7f14_14-9021/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — View 2"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/4881299d0f3668bc_14-9415/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Exterior"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="naples-beach"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/2e2101480f9b09cd_6110-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Naples Beach Condo"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="beach-condo"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Beach Condo Rentals"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/a53193d008934de1_0327-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 1"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/bb618b92089dbc64_5887-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 2"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/0961be1308934ddc_1477-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 3"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/89e18a5208934dde_1658-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 4"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
-            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/fde1f7c808934de0_1477-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 5"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div></div>
+            <div class="photo-card" data-album="riverstone"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Riverstone — Living"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Entry"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Living Room"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Kitchen"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="shadowood"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Shadowood — Kitchen"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="estero"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Estero — Remodel"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/b911d9d7089a4042_9-4721/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Bedroom"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/1da143cd089a404e_9-4727/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Dining"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/2b31dae3089b7f14_14-9021/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — View 2"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="bayfront"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/simgs/4881299d0f3668bc_14-9415/home-design.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Bayfront — Exterior"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="naples-beach"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/2e2101480f9b09cd_6110-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Naples Beach Condo"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="beach-condo"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Beach Condo Rentals"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/a53193d008934de1_0327-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 1"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/bb618b92089dbc64_5887-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 2"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/0961be1308934ddc_1477-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 3"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/89e18a5208934dde_1658-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 4"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
+            <div class="photo-card" data-album="banner"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/fde1f7c808934de0_1477-w800-h600-b2-p0--.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Banner — Image 5"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div></div>
             <div class="photo-upload-zone" id="sitePhotoDropZone"><span style="font-size:32px; opacity:0.35;">+</span><strong>Drop photos</strong><input type="file" accept="image/*" multiple onchange="handleSitePhotoUpload(this.files)"></div>
           </div>
         </div>
@@ -1443,7 +1453,7 @@ ACTION ITEMS:
 
 <script>
 // ===== HERO SLIDER =====
-const slides = document.querySelectorAll('.hero-slide');
+let slides = document.querySelectorAll('.hero-slide');
 const indicatorsContainer = document.getElementById('heroIndicators');
 let currentSlide = 0;
 slides.forEach((_, i) => {
@@ -1453,16 +1463,21 @@ slides.forEach((_, i) => {
   indicatorsContainer.appendChild(dot);
 });
 function goToSlide(n) {
-  slides[currentSlide].classList.remove('active');
-  slides[currentSlide].style.transform = 'scale(1)';
-  document.querySelectorAll('.hero-dot')[currentSlide].classList.remove('active');
-  currentSlide = n;
+  slides = document.querySelectorAll('.hero-slide');
+  if (slides.length === 0) return;
+  if (currentSlide < slides.length) {
+    slides[currentSlide].classList.remove('active');
+    slides[currentSlide].style.transform = 'scale(1)';
+  }
+  document.querySelectorAll('.hero-dot').forEach(d => d.classList.remove('active'));
+  currentSlide = n % slides.length;
   const zoom = slides[currentSlide].dataset.zoom || 1.02;
   slides[currentSlide].style.transform = 'scale(' + zoom + ')';
   slides[currentSlide].classList.add('active');
-  document.querySelectorAll('.hero-dot')[currentSlide].classList.add('active');
+  const dots = document.querySelectorAll('.hero-dot');
+  if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 }
-setInterval(() => goToSlide((currentSlide + 1) % slides.length), 5500);
+setInterval(() => { slides = document.querySelectorAll('.hero-slide'); if (slides.length > 0) goToSlide((currentSlide + 1) % slides.length); }, 5500);
 
 // ===== NAV SCROLL =====
 window.addEventListener('scroll', () => {
@@ -1609,7 +1624,6 @@ function updateHeroZoom(slideIdx, val) {
   if (slides[slideIdx]) {
     const scale = val / 100;
     slides[slideIdx].dataset.zoom = scale;
-    // If this slide is currently active, apply immediately
     if (slides[slideIdx].classList.contains('active')) {
       slides[slideIdx].style.transform = 'scale(' + scale + ')';
     }
@@ -1619,6 +1633,7 @@ function updateHeroZoom(slideIdx, val) {
     const label = cards[slideIdx].querySelector('.hero-zoom-val');
     if (label) label.textContent = val + '%';
   }
+  saveHeroState();
 }
 let currentSiteFilter = 'all';
 function filterSitePhotos(album, btn) {
@@ -1641,6 +1656,10 @@ function handleSitePhotoUpload(files) {
       card.className = 'photo-card'; card.dataset.album = album;
       card.innerHTML = '<div class="photo-card-img" style="background-image:url(\''+e.target.result+'\')"></div><div class="photo-card-body"><input class="photo-card-label" value="'+file.name.replace(/\.[^/.]+$/,'')+'"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button><button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest(\'.photo-card\').remove()">Delete</button></div></div>';
       grid.insertBefore(card, dropZone);
+      // Also add to public portfolio grid
+      addToPortfolioGrid(e.target.result, file.name.replace(/\.[^/.]+$/,''), '');
+      // Save to localStorage
+      savePortfolioPhotos();
     };
     reader.readAsDataURL(file);
   });
@@ -1695,8 +1714,9 @@ function createProject() {
   projects.push({ name, client, location, type, status: 'New', img: '', rooms: ['Room 1'], budget: 0 });
   const card = document.createElement('div');
   card.className = 'proj-card';
+  card.dataset.projIdx = idx;
   card.onclick = () => openProject(idx);
-  card.innerHTML = `<div class="proj-card-img" style="background:var(--sand);"><span class="proj-card-status" style="background:rgba(191,166,122,0.15);color:#8A7040;">New</span></div><div class="proj-card-body"><div class="proj-card-name">${name}</div><div class="proj-card-client">${client} · ${location}</div><div class="proj-card-meta"><span>${type}</span></div></div>`;
+  card.innerHTML = `<div class="proj-card-img" style="background:var(--sand);"><span class="proj-card-status" style="background:rgba(191,166,122,0.15);color:#8A7040;">New</span><button class="proj-delete" onclick="event.stopPropagation();deleteProject(${idx},this)">✕</button></div><div class="proj-card-body"><div class="proj-card-name">${name}</div><div class="proj-card-client">${client} · ${location}</div><div class="proj-card-meta"><span>${type}</span></div></div>`;
   const grid = document.getElementById('projectCards');
   const newBtn = grid.querySelector('.new-proj-card');
   grid.insertBefore(card, newBtn);
@@ -1704,6 +1724,16 @@ function createProject() {
   document.getElementById('npName').value = '';
   document.getElementById('npClient').value = '';
   document.getElementById('npLocation').value = '';
+}
+function deleteProject(idx, btn) {
+  const name = projects[idx] ? projects[idx].name : 'this project';
+  if (!confirm('Are you sure you want to delete "' + name + '"?')) return;
+  if (!confirm('This cannot be undone. Delete "' + name + '" permanently?')) return;
+  // Remove from array
+  projects[idx] = null;
+  // Remove card from DOM
+  const card = btn.closest('.proj-card');
+  if (card) card.remove();
 }
 
 // Room vision boards
@@ -1819,7 +1849,7 @@ function handlePhotoUpload(files) {
       const dropZone = document.getElementById('photoDropZone');
       const card = document.createElement('div');
       card.className = 'photo-card'; card.dataset.project = 'other';
-      card.innerHTML = `<div class="photo-card-img" style="background-image:url('${e.target.result}')"></div><div class="photo-card-body"><input class="photo-card-label" value="${file.name.replace(/\.[^/.]+$/,'')}"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Delete</button></div></div>`;
+      card.innerHTML = `<div class="photo-card-img" style="background-image:url('${e.target.result}')"></div><div class="photo-card-body"><input class="photo-card-label" value="${file.name.replace(/\.[^/.]+$/,'')}"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA('before',this)">Set Before</button><button class="photo-action-btn" onclick="setBA('after',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div>`;
       grid.insertBefore(card, dropZone);
     };
     reader.readAsDataURL(file);
@@ -1844,6 +1874,7 @@ function setBA(slot, btn) {
   }
   btn.textContent = '✓ Set'; btn.style.background = 'var(--olive)'; btn.style.color = 'white';
   setTimeout(() => { btn.textContent = slot === 'before' ? 'Set Before' : 'Set After'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+  saveBAState();
 }
 function addToHero(btn) {
   const card = btn.closest('.photo-card');
@@ -1878,6 +1909,11 @@ function addToHero(btn) {
   // Feedback
   btn.textContent = '✓ Added'; btn.style.background = 'var(--olive)'; btn.style.color = 'white';
   setTimeout(() => { btn.textContent = '+ Hero'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+  saveHeroState();
+}
+function deleteSitePhoto(btn) {
+  btn.closest('.photo-card').remove();
+  savePortfolioPhotos();
 }
 function savePhotoChanges() {
   const btn = event.target;
@@ -1922,6 +1958,159 @@ if (sDZ) {
   sDZ.addEventListener('drop', e => { e.preventDefault(); handleSitePhotoUpload(e.dataTransfer.files); });
 }
 
+
+// ===== PERSISTENCE (localStorage) =====
+function saveHeroState() {
+  try {
+    const heroSlides = [];
+    document.querySelectorAll('.hero-slide').forEach(slide => {
+      heroSlides.push({
+        url: slide.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''),
+        zoom: slide.dataset.zoom || 1.02
+      });
+    });
+    localStorage.setItem('sid_heroSlides', JSON.stringify(heroSlides));
+  } catch(e) {}
+}
+function saveBAState() {
+  try {
+    const before = document.getElementById('baBefore');
+    const after = document.getElementById('baAfter');
+    if (before && after) {
+      localStorage.setItem('sid_baBefore', before.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''));
+      localStorage.setItem('sid_baAfter', after.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''));
+    }
+  } catch(e) {}
+}
+function savePortfolioPhotos() {
+  try {
+    const photos = [];
+    document.querySelectorAll('#sitePhotoGrid .photo-card').forEach(card => {
+      const img = card.querySelector('.photo-card-img');
+      const label = card.querySelector('.photo-card-label');
+      if (img && label) {
+        photos.push({
+          url: img.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''),
+          label: label.value,
+          album: card.dataset.album || 'other'
+        });
+      }
+    });
+    localStorage.setItem('sid_portfolioPhotos', JSON.stringify(photos));
+  } catch(e) {}
+}
+function addToPortfolioGrid(url, label, location) {
+  const grid = document.getElementById('portfolioGrid');
+  if (!grid) return;
+  const card = document.createElement('div');
+  card.className = 'project-card reveal-scale visible';
+  card.onclick = () => openLightbox(url, label);
+  card.innerHTML = '<div class="project-img" style="background-image:url(\'' + url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + (location||'') + '</div><div class="project-name">' + label + '</div><div class="project-view">View Project →</div></div>';
+  grid.appendChild(card);
+}
+function loadSavedState() {
+  try {
+    // Load hero slides
+    const savedHero = localStorage.getItem('sid_heroSlides');
+    if (savedHero) {
+      const heroData = JSON.parse(savedHero);
+      const slideshow = document.querySelector('.hero-slideshow');
+      const award = slideshow.querySelector('.hero-award-float');
+      document.querySelectorAll('.hero-slide').forEach(s => s.remove());
+      heroData.forEach((s, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'hero-slide' + (i === 0 ? ' active' : '');
+        slide.style.backgroundImage = "url('" + s.url + "')";
+        slide.style.backgroundSize = 'cover';
+        slide.style.backgroundPosition = 'center';
+        slide.dataset.zoom = s.zoom;
+        if (i === 0) slide.style.transform = 'scale(' + s.zoom + ')';
+        slideshow.insertBefore(slide, award);
+      });
+      const indicators = document.getElementById('heroIndicators');
+      indicators.innerHTML = '';
+      heroData.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => goToSlide(i);
+        indicators.appendChild(dot);
+      });
+      const manager = document.getElementById('heroSlideManager');
+      if (manager) {
+        manager.innerHTML = '';
+        heroData.forEach((s, i) => {
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.dataset.hero = i;
+          const zoomPct = Math.round(s.zoom * 100);
+          card.innerHTML = '<div class="photo-card-img" style="background-image:url(\'' + s.url + '\')"></div><div class="photo-card-body"><input class="photo-card-label" value="Hero Slide ' + (i+1) + '"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light); letter-spacing:1px;">ZOOM:</label><input type="range" min="100" max="140" value="' + zoomPct + '" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(' + i + ',this.value)" oninput="updateHeroZoom(' + i + ',this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light); min-width:35px;">' + zoomPct + '%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">● Slide ' + (i+1) + '</span><button class="photo-action-btn delete" onclick="this.closest(\'.photo-card\').remove();removeHeroSlide(' + i + ')">Remove</button></div></div>';
+          manager.appendChild(card);
+        });
+      }
+      currentSlide = 0;
+      slides = document.querySelectorAll('.hero-slide');
+    } else {
+      // No saved state — apply initial zoom to default slides
+      document.querySelectorAll('.hero-slide').forEach(s => { s.dataset.zoom = 1.02; });
+      const first = document.querySelector('.hero-slide.active');
+      if (first) first.style.transform = 'scale(1.02)';
+    }
+
+    // Load B&A photos
+    const savedBefore = localStorage.getItem('sid_baBefore');
+    const savedAfter = localStorage.getItem('sid_baAfter');
+    if (savedBefore) {
+      const el = document.getElementById('baBefore');
+      if (el) el.style.backgroundImage = "url('" + savedBefore + "')";
+      const p = document.getElementById('baBeforePreview');
+      if (p) p.style.backgroundImage = "url('" + savedBefore + "')";
+    }
+    if (savedAfter) {
+      const el = document.getElementById('baAfter');
+      if (el) el.style.backgroundImage = "url('" + savedAfter + "')";
+      const p = document.getElementById('baAfterPreview');
+      if (p) p.style.backgroundImage = "url('" + savedAfter + "')";
+    }
+
+    // Load saved portfolio photos (add any new uploads to public grid)
+    const savedPortfolio = localStorage.getItem('sid_portfolioPhotos');
+    if (savedPortfolio) {
+      const photos = JSON.parse(savedPortfolio);
+      // Check which URLs are already in the default portfolio
+      const existingUrls = new Set();
+      document.querySelectorAll('#portfolioGrid .project-img').forEach(el => {
+        existingUrls.add(el.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''));
+      });
+      photos.forEach(p => {
+        if (!existingUrls.has(p.url) && p.url) {
+          addToPortfolioGrid(p.url, p.label, '');
+        }
+      });
+    }
+  } catch(e) { console.log('Load state error:', e); }
+}
+function removeHeroSlide(idx) {
+  const allSlides = document.querySelectorAll('.hero-slide');
+  if (allSlides[idx]) allSlides[idx].remove();
+  slides = document.querySelectorAll('.hero-slide');
+  if (currentSlide >= slides.length) currentSlide = 0;
+  if (slides.length > 0 && !document.querySelector('.hero-slide.active')) {
+    slides[0].classList.add('active');
+    slides[0].style.transform = 'scale(' + (slides[0].dataset.zoom || 1.02) + ')';
+  }
+  const indicators = document.getElementById('heroIndicators');
+  indicators.innerHTML = '';
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'hero-dot' + (i === currentSlide ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    indicators.appendChild(dot);
+  });
+  saveHeroState();
+}
+
+// Load saved state on page load
+loadSavedState();
 
 // ===== SMOOTH SCROLL =====
 document.querySelectorAll('a[href^="#"]').forEach(a => {
