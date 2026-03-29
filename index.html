@@ -1331,7 +1331,7 @@
           <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline">Export to PDF</button><button class="portal-btn portal-btn-outline" onclick="clearNotes()" style="color:#C44;">Clear All</button></div></div>
           <div class="notes-area">
             <div class="notes-toolbar"><button class="notes-tool-btn"><b>B</b></button><button class="notes-tool-btn"><i>I</i></button><button class="notes-tool-btn"><u>U</u></button><button class="notes-tool-btn">☰</button></div>
-            <textarea class="notes-textarea">Henderson Kitchen — Meeting Notes (3/25/26)
+            <textarea class="notes-textarea" oninput="saveNotes(activeProject)">Henderson Kitchen — Meeting Notes (3/25/26)
 
 • Client prefers warm whites over cool tones
 • Keep existing island footprint, extend countertop for bar seating
@@ -2089,6 +2089,7 @@ renderFolders();
 
 function openProject(idx) {
   activeProject = idx;
+  setTimeout(function() { loadVisionBoard(idx); loadScopeItems(idx); loadNotes(idx); loadBudgetItems(idx); }, 50);
   document.getElementById('projectDashboard').style.display = 'none';
   const ws = document.getElementById('projectWorkspace');
   ws.style.display = 'flex';
@@ -2144,6 +2145,200 @@ function deleteProject(idx, btn) {
 }
 
 // Room vision boards
+// ===== PROJECT DATA PERSISTENCE =====
+function saveVisionBoard(projIdx) {
+  var boards = [];
+  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
+  tabs.forEach(function(tab, i) {
+    var boardEl = document.getElementById('boardItems-' + i);
+    var items = [];
+    if (boardEl) {
+      boardEl.querySelectorAll('.board-item').forEach(function(item) {
+        var inner = item.querySelector('.board-item-inner');
+        var label = item.querySelector('.board-item-label');
+        var imgEl = inner ? inner.querySelector('img') : null;
+        var bg = inner ? inner.style.backgroundImage : '';
+        var src = '';
+        if (imgEl) src = imgEl.src;
+        else if (bg) src = bg.replace(/url\(['"]?|['"]?\)/g, '');
+        if (src || (label && label.textContent)) {
+          items.push({ src: src, label: label ? label.textContent : '' });
+        }
+      });
+    }
+    boards.push({ name: tab.textContent, items: items });
+  });
+  try { localStorage.setItem('sid_proj_' + projIdx + '_vision', JSON.stringify(boards)); } catch(e) {}
+}
+
+function loadVisionBoard(projIdx) {
+  try {
+    var data = localStorage.getItem('sid_proj_' + projIdx + '_vision');
+    if (!data) return false;
+    var boards = JSON.parse(data);
+    if (!boards || boards.length === 0) return false;
+    // Rebuild room tabs
+    var tabBar = document.querySelector('.room-tabs');
+    if (!tabBar) return false;
+    tabBar.innerHTML = '';
+    boards.forEach(function(room, i) {
+      var tab = document.createElement('button');
+      tab.className = 'room-tab' + (i === 0 ? ' active' : '');
+      tab.textContent = room.name;
+      tab.onclick = function() { switchRoom(i, tab); };
+      tabBar.appendChild(tab);
+    });
+    var addBtn = document.createElement('button');
+    addBtn.className = 'room-tab add-room-btn';
+    addBtn.textContent = '+';
+    addBtn.onclick = addRoom;
+    tabBar.appendChild(addBtn);
+    // Rebuild boards
+    var container = document.getElementById('roomBoards');
+    if (!container) return false;
+    container.innerHTML = '';
+    boards.forEach(function(room, i) {
+      var boardDiv = document.createElement('div');
+      boardDiv.className = 'board-items';
+      boardDiv.id = 'boardItems-' + i;
+      boardDiv.style.display = (i === 0) ? 'grid' : 'none';
+      room.items.forEach(function(item) {
+        var el = document.createElement('div');
+        el.className = 'board-item';
+        el.draggable = true;
+        var inner = document.createElement('div');
+        inner.className = 'board-item-inner';
+        if (item.src) {
+          if (item.src.startsWith('data:') || item.src.match(/\.(jpg|jpeg|png|gif|webp)/i)) {
+            inner.style.padding = '0';
+            inner.style.overflow = 'hidden';
+            var img = document.createElement('img');
+            img.src = item.src;
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+            inner.appendChild(img);
+          } else {
+            inner.style.backgroundImage = "url('" + item.src + "')";
+          }
+        }
+        el.appendChild(inner);
+        var lbl = document.createElement('div');
+        lbl.className = 'board-item-label';
+        lbl.textContent = item.label;
+        el.appendChild(lbl);
+        var btn = document.createElement('button');
+        btn.className = 'board-item-remove';
+        btn.textContent = 'x';
+        btn.onclick = function(e) { e.stopPropagation(); el.remove(); saveVisionBoard(activeProject); };
+        el.appendChild(btn);
+        boardDiv.appendChild(el);
+      });
+      // Add drop zone
+      var dz = document.createElement('div');
+      dz.className = 'board-drop-zone';
+      dz.onclick = function() { dz.querySelector('input').click(); };
+      dz.innerHTML = '<span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,' + i + ')">';
+      boardDiv.appendChild(dz);
+      container.appendChild(boardDiv);
+    });
+    return true;
+  } catch(e) { return false; }
+}
+
+function saveScopeItems(projIdx) {
+  var items = [];
+  document.querySelectorAll('#scopeChecklist .scope-check-item').forEach(function(item) {
+    var cb = item.querySelector('input[type="checkbox"]');
+    var label = item.querySelector('.scope-check-label');
+    if (label) items.push({ text: label.textContent, done: cb ? cb.checked : false });
+  });
+  try { localStorage.setItem('sid_proj_' + projIdx + '_scope', JSON.stringify(items)); } catch(e) {}
+}
+
+function loadScopeItems(projIdx) {
+  try {
+    var data = localStorage.getItem('sid_proj_' + projIdx + '_scope');
+    if (!data) return false;
+    var items = JSON.parse(data);
+    var list = document.getElementById('scopeChecklist');
+    if (!list) return false;
+    list.innerHTML = '';
+    items.forEach(function(item) {
+      var el = document.createElement('div');
+      el.className = 'scope-check-item';
+      el.innerHTML = '<input type="checkbox"' + (item.done ? ' checked' : '') + ' onchange="saveScopeItems(' + projIdx + ')"><span class="scope-check-label">' + item.text + '</span><button class="scope-check-remove" onclick="this.parentElement.remove();saveScopeItems(' + projIdx + ')">x</button>';
+      list.appendChild(el);
+    });
+    return true;
+  } catch(e) { return false; }
+}
+
+function saveNotes(projIdx) {
+  var ta = document.querySelector('.notes-textarea');
+  if (ta) {
+    try { localStorage.setItem('sid_proj_' + projIdx + '_notes', ta.value); } catch(e) {}
+  }
+}
+
+function loadNotes(projIdx) {
+  try {
+    var data = localStorage.getItem('sid_proj_' + projIdx + '_notes');
+    if (data === null) return false;
+    var ta = document.querySelector('.notes-textarea');
+    if (ta) { ta.value = data; return true; }
+    return false;
+  } catch(e) { return false; }
+}
+
+function saveBudgetItems(projIdx) {
+  var items = [];
+  document.querySelectorAll('#budgetTable .budget-row').forEach(function(row) {
+    var cells = row.querySelectorAll('input');
+    if (cells.length >= 4) {
+      items.push({
+        name: cells[0].value,
+        cost: cells[1].value,
+        qty: cells[2].value,
+        markup: cells[3].value
+      });
+    }
+  });
+  try { localStorage.setItem('sid_proj_' + projIdx + '_budget', JSON.stringify(items)); } catch(e) {}
+}
+
+function loadBudgetItems(projIdx) {
+  try {
+    var data = localStorage.getItem('sid_proj_' + projIdx + '_budget');
+    if (!data) return false;
+    var items = JSON.parse(data);
+    var table = document.getElementById('budgetTable');
+    if (!table) return false;
+    table.innerHTML = '';
+    items.forEach(function(item) {
+      addBudgetRowWithData(item.name, item.cost, item.qty, item.markup);
+    });
+    return true;
+  } catch(e) { return false; }
+}
+
+function addBudgetRowWithData(name, cost, qty, markup) {
+  var table = document.getElementById('budgetTable');
+  if (!table) return;
+  var row = document.createElement('div');
+  row.className = 'budget-row';
+  row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 0.5fr 0.5fr 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #f0ebe0;';
+  var costNum = parseFloat(cost) || 0;
+  var qtyNum = parseFloat(qty) || 1;
+  var markupNum = parseFloat(markup) || 30;
+  var total = (costNum * qtyNum * (1 + markupNum/100)).toFixed(2);
+  row.innerHTML = '<input style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (name||'') + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
+    + '<input type="number" style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (cost||'') + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
+    + '<input type="number" style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (qty||1) + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
+    + '<input type="number" style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (markup||30) + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
+    + '<span style="font-weight:500;color:var(--charcoal);">$' + total + '</span>'
+    + '<button onclick="this.parentElement.remove();saveBudgetItems(activeProject);updateBudgetTotals()" style="background:none;border:none;color:#C44;cursor:pointer;font-size:16px;">x</button>';
+  table.appendChild(row);
+}
+
 function switchRoom(idx, btn) {
   document.querySelectorAll('.room-tab:not(.add-room-btn)').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -2171,6 +2366,7 @@ function addRoom() {
   switchRoom(idx, tab);
 }
 function handleRoomUpload(files, roomIdx) {
+  setTimeout(function() { saveVisionBoard(activeProject); }, 500);
   Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
@@ -2294,6 +2490,7 @@ function addImageFromUrl(roomIdx) {
 }
 
 function addUrlImageToBoard(url, label, roomIdx) {
+  setTimeout(function() { saveVisionBoard(activeProject); }, 200);
   var board = document.getElementById('boardItems-' + roomIdx);
   if (!board) return;
   var dropZone = board.querySelector('.board-drop-zone');
@@ -2391,6 +2588,7 @@ function clearNotes() {
   if (ta) ta.value = '';
 }
 function addScopeItem() {
+  setTimeout(function() { saveScopeItems(activeProject); }, 100);
   const text = prompt('Scope item:');
   if (!text) return;
   const item = document.createElement('div');
