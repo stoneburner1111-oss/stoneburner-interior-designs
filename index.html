@@ -2080,6 +2080,42 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// Enable Cmd+V paste onto vision boards
+document.addEventListener('paste', function(e) {
+  // Only work when portal is open and vision tab is visible
+  var visionTab = document.getElementById('tab-vision');
+  if (!visionTab || visionTab.style.display === 'none') return;
+  var items = e.clipboardData.items;
+  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
+  var activeIdx = 0;
+  tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
+  for (var i = 0; i < items.length; i++) {
+    // Handle pasted images (screenshots, copied images)
+    if (items[i].type.indexOf('image') !== -1) {
+      var file = items[i].getAsFile();
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        addUrlImageToBoard(ev.target.result, 'Pasted Image', activeIdx);
+      };
+      reader.readAsDataURL(file);
+      e.preventDefault();
+      return;
+    }
+    // Handle pasted text (URLs)
+    if (items[i].type === 'text/plain') {
+      items[i].getAsString(function(text) {
+        text = text.trim();
+        if (text.match(/^https?:\/\//)) {
+          var label = text.split('/').pop().split('?')[0].substring(0, 40) || 'Pasted Link';
+          addUrlImageToBoard(text, label, activeIdx);
+        }
+      });
+      e.preventDefault();
+      return;
+    }
+  }
+});
+
 // Initialize folders on load
 renderFolders();
 
