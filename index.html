@@ -128,7 +128,7 @@
   }
   .hero-slide {
     position: absolute; inset: 0; opacity: 0;
-    transition: opacity 1.2s ease, transform 8s linear;
+    transition: opacity 1.2s ease;
     background-size: cover; background-position: center;
     transform: scale(1);
   }
@@ -1709,13 +1709,12 @@ function switchDashTab(panel, btn) {
   if (btn) btn.classList.add('active');
 }
 function updateHeroZoom(slideIdx, val) {
-  const slides = document.querySelectorAll('.hero-slide');
-  if (slides[slideIdx]) {
+  const allSlides = document.querySelectorAll('.hero-slide');
+  if (allSlides[slideIdx]) {
     const scale = val / 100;
-    slides[slideIdx].dataset.zoom = scale;
-    if (slides[slideIdx].classList.contains('active')) {
-      slides[slideIdx].style.transform = 'scale(' + scale + ')';
-    }
+    allSlides[slideIdx].dataset.zoom = scale;
+    // Always apply transform so it's ready when slide becomes active
+    allSlides[slideIdx].style.transform = 'scale(' + scale + ')';
   }
   const cards = document.querySelectorAll('[data-hero]');
   if (cards[slideIdx]) {
@@ -1733,32 +1732,95 @@ function filterSitePhotos(album, btn) {
     c.style.display = (album === 'all' || c.dataset.album === album) ? '' : 'none';
   });
 }
+// Compress image before storing (base64 images are too large for localStorage raw)
+function compressImage(dataUrl, maxWidth, quality, callback) {
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    let w = img.width, h = img.height;
+    if (w > maxWidth) { h = h * (maxWidth / w); w = maxWidth; }
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL('image/jpeg', quality));
+  };
+  img.src = dataUrl;
+}
+
 function handleSitePhotoUpload(files) {
   const albumKey = currentSiteFilter !== 'all' ? currentSiteFilter : 'other';
-  const albums = getSiteAlbums();
+  let pending = files.length;
   Array.from(files).forEach(file => {
-    if (!file.type.startsWith('image/')) return;
+    if (!file.type.startsWith('image/')) { pending--; return; }
     const reader = new FileReader();
     reader.onload = e => {
-      const label = file.name.replace(/\.[^/.]+$/, '');
-      // Add to album data
-      const album = albums.find(a => a.key === albumKey);
-      if (album) {
-        album.photos.push({ url: e.target.result, label: label });
-        saveSiteAlbums(albums);
-        renderPortfolio();
-      }
-      // Add card to admin grid
-      const grid = document.getElementById('sitePhotoGrid');
-      const dropZone = document.getElementById('sitePhotoDropZone');
-      const card = document.createElement('div');
-      card.className = 'photo-card'; card.dataset.album = albumKey;
-      card.innerHTML = '<div class="photo-card-img" style="background-image:url(\''+e.target.result+'\')"></div><div class="photo-card-body"><input class="photo-card-label" value="'+label+'"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button><button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div>';
-      grid.insertBefore(card, dropZone);
+      // Compress to max 800px wide, 70% quality (~50-100KB per photo)
+      compressImage(e.target.result, 800, 0.7, compressed => {
+        const label = file.name.replace(/\.[^/.]+$/, '');
+        // Add to album data (re-read each time to avoid race conditions)
+        const albums = getSiteAlbums();
+        const album = albums.find(a => a.key === albumKey);
+        if (album) {
+          album.photos.push({ url: compressed, label: label });
+          saveSiteAlbums(albums);
+          renderPortfolio();
+        }
+        // Add card to admin grid
+        const grid = document.getElementById('sitePhotoGrid');
+        const dropZone = document.getElementById('sitePhotoDropZone');
+        const card = document.createElement('div');
+        card.className = 'photo-card'; card.draggable = true; card.dataset.album = albumKey;
+        card.innerHTML = '<div class="photo-card-img" style="background-image:url(\''+compressed+'\')"></div><div class="photo-card-body"><input class="photo-card-label" value="'+label+'"><div class="photo-card-actions"><button class="photo-action-btn" onclick="setBA(\'before\',this)">Set Before</button><button class="photo-action-btn" onclick="setBA(\'after\',this)">Set After</button><button class="photo-action-btn" onclick="addToHero(this)">+ Hero</button><button class="photo-action-btn delete" onclick="deleteSitePhoto(this)">Delete</button></div></div>';
+        grid.insertBefore(card, dropZone);
+        setupPhotoDrag(card);
+      });
     };
     reader.readAsDataURL(file);
   });
 }
+
+// Photo card drag-to-reorder within albums
+let dragPhotoEl = null;
+function setupPhotoDrag(el) {
+  el.addEventListener('dragstart', () => { dragPhotoEl = el; el.style.opacity = '0.4'; });
+  el.addEventListener('dragend', () => { el.style.opacity = '1'; dragPhotoEl = null; savePhotoOrder(); });
+  el.addEventListener('dragover', e => { e.preventDefault(); });
+  el.addEventListener('drop', e => {
+    e.preventDefault();
+    if (dragPhotoEl && dragPhotoEl !== el && dragPhotoEl.dataset.album === el.dataset.album) {
+      const grid = el.parentNode;
+      const allCards = [...grid.querySelectorAll('.photo-card[data-album="'+el.dataset.album+'"]')];
+      const dragIdx = allCards.indexOf(dragPhotoEl);
+      const dropIdx = allCards.indexOf(el);
+      if (dragIdx < dropIdx) el.parentNode.insertBefore(dragPhotoEl, el.nextSibling);
+      else el.parentNode.insertBefore(dragPhotoEl, el);
+    }
+  });
+}
+function savePhotoOrder() {
+  // Rebuild album photo arrays from current DOM order
+  const albums = getSiteAlbums();
+  albums.forEach(album => {
+    const cards = document.querySelectorAll('#sitePhotoGrid .photo-card[data-album="'+album.key+'"]');
+    if (cards.length > 0) {
+      album.photos = [];
+      cards.forEach(card => {
+        const img = card.querySelector('.photo-card-img');
+        const label = card.querySelector('.photo-card-label');
+        if (img && label) {
+          album.photos.push({
+            url: img.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, ''),
+            label: label.value
+          });
+        }
+      });
+    }
+  });
+  saveSiteAlbums(albums);
+  renderPortfolio();
+}
+// Setup drag on existing photo cards
+document.querySelectorAll('#sitePhotoGrid .photo-card').forEach(c => { c.draggable = true; setupPhotoDrag(c); });
 function addAlbum() {
   const name = prompt('Album name (e.g., "Gulf Harbor — Naples"):');
   if (!name) return;
