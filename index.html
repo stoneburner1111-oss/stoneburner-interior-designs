@@ -2895,15 +2895,19 @@ function removeHeroSlide(idx) {
 async function initFromDB() {
   try {
     var albums = await DB.get('sid_albums');
-    if (albums) { localStorage.setItem('sid_albums', JSON.stringify(albums)); renderPortfolio(); }
+    if (albums) {
+      localStorage.setItem('sid_albums', JSON.stringify(albums));
+    } else {
+      DB.set('sid_albums', defaultAlbums);
+    }
     var hero = await DB.get('sid_heroSlides');
-    if (hero) localStorage.setItem('sid_heroSlides', JSON.stringify(hero));
-    var baBefore = await DB.get('sid_baBefore');
-    if (baBefore) localStorage.setItem('sid_baBefore', JSON.stringify(baBefore));
-    var baAfter = await DB.get('sid_baAfter');
-    if (baAfter) localStorage.setItem('sid_baAfter', JSON.stringify(baAfter));
+    if (hero) {
+      localStorage.setItem('sid_heroSlides', JSON.stringify(hero));
+    }
     var projects = await DB.get('sid_projects');
-    if (projects) localStorage.setItem('sid_projects', JSON.stringify(projects));
+    if (projects) {
+      localStorage.setItem('sid_projects', JSON.stringify(projects));
+    }
     loadSavedState();
     renderPortfolio();
   } catch(e) {
