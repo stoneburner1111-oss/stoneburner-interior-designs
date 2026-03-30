@@ -495,6 +495,9 @@
   .scope-check-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(232,223,208,0.5); font-size: 14px; color: var(--text); cursor: pointer; transition: all 0.2s; }
   .scope-check-item:hover { padding-left: 4px; }
   .scope-check-item:last-child { border-bottom: none; }
+  .scope-check-item .scope-delete { opacity: 0; margin-left: auto; background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 16px; padding: 0 4px; transition: all 0.2s; flex-shrink: 0; }
+  .scope-check-item:hover .scope-delete { opacity: 1; }
+  .scope-check-item .scope-delete:hover { color: #C44; }
   .scope-checkbox { width: 20px; height: 20px; border: 1.5px solid var(--sand); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
   .scope-check-item.checked .scope-checkbox { background: var(--olive); border-color: var(--olive); color: white; font-size: 12px; }
   .scope-check-item.checked span { text-decoration: line-through; color: var(--text-light); }
@@ -1331,24 +1334,24 @@
         </div>
         <!-- SCOPE TAB -->
         <div class="portal-tab" id="tab-scope" style="display:none;">
-          <div class="portal-main-header"><h2 class="portal-main-title">Scope of Work</h2><button class="portal-btn portal-btn-outline" onclick="addScopeItem()">+ Add Item</button></div>
+          <div class="portal-main-header"><h2 class="portal-main-title">Scope of Work</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline" onclick="addScopeItem()">+ Add Item</button><button class="portal-btn portal-btn-outline" onclick="clearScope()" style="color:#C44;border-color:#C44;">Clear All</button></div></div>
           <div class="scope-card">
             <div class="scope-card-header"><div class="scope-card-title">Kitchen Remodel</div><span class="scope-status status-active">In Progress</span></div>
             <div class="scope-checklist" id="scopeChecklist">
-              <div class="scope-check-item checked" onclick="this.classList.toggle('checked')"><div class="scope-checkbox">✓</div><span>Initial consultation & measurements</span></div>
-              <div class="scope-check-item checked" onclick="this.classList.toggle('checked')"><div class="scope-checkbox">✓</div><span>Demo old kitchen</span></div>
-              <div class="scope-check-item checked" onclick="this.classList.toggle('checked')"><div class="scope-checkbox">✓</div><span>Cabinet order — Shaker White</span></div>
-              <div class="scope-check-item" onclick="this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Countertop selection & template</span></div>
-              <div class="scope-check-item" onclick="this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Backsplash tile — client reviewing samples</span></div>
-              <div class="scope-check-item" onclick="this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Plumbing rough-in</span></div>
-              <div class="scope-check-item" onclick="this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Cabinet installation</span></div>
-              <div class="scope-check-item" onclick="this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Final walkthrough & punch list</span></div>
+              <div class="scope-check-item checked" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox">✓</div><span>Initial consultation & measurements</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item checked" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox">✓</div><span>Demo old kitchen</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item checked" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox">✓</div><span>Cabinet order — Shaker White</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Countertop selection & template</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Backsplash tile — client reviewing samples</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Plumbing rough-in</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Cabinet installation</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+              <div class="scope-check-item" onclick="if(!event.target.classList.contains('scope-delete'))this.classList.toggle('checked')"><div class="scope-checkbox"></div><span>Final walkthrough & punch list</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
             </div>
           </div>
         </div>
         <!-- NOTES TAB -->
         <div class="portal-tab" id="tab-notes" style="display:none;">
-          <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><button class="portal-btn portal-btn-outline">Export to PDF</button></div>
+          <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline" onclick="exportNotes()">Export to PDF</button><button class="portal-btn portal-btn-outline" onclick="clearNotes()" style="color:#C44;border-color:#C44;">Clear</button></div></div>
           <div class="notes-area">
             <div class="notes-toolbar"><button class="notes-tool-btn"><b>B</b></button><button class="notes-tool-btn"><i>I</i></button><button class="notes-tool-btn"><u>U</u></button><button class="notes-tool-btn">☰</button></div>
             <textarea class="notes-textarea">Henderson Kitchen — Meeting Notes (3/25/26)
@@ -2312,9 +2315,27 @@ function addScopeItem() {
   if (!text) return;
   const item = document.createElement('div');
   item.className = 'scope-check-item';
-  item.onclick = function() { this.classList.toggle('checked'); };
-  item.innerHTML = `<div class="scope-checkbox"></div><span>${text}</span>`;
+  item.onclick = function(e) { if (!e.target.classList.contains('scope-delete')) this.classList.toggle('checked'); };
+  item.innerHTML = '<div class="scope-checkbox"></div><span>' + text + '</span><button class="scope-delete" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>';
   document.getElementById('scopeChecklist').appendChild(item);
+}
+function clearScope() {
+  if (confirm('Clear all scope items? This cannot be undone.')) {
+    document.getElementById('scopeChecklist').innerHTML = '';
+  }
+}
+function clearNotes() {
+  if (confirm('Clear all notes? This cannot be undone.')) {
+    document.querySelector('.notes-textarea').value = '';
+  }
+}
+function exportNotes() {
+  const text = document.querySelector('.notes-textarea').value;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'shared-notes.txt';
+  a.click();
 }
 
 // Budget & Invoicing
