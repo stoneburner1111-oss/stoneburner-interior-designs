@@ -2203,16 +2203,13 @@ document.addEventListener('paste', e => {
 
   if (!portalOpen || !visionVisible) return;
 
-  const items = e.clipboardData && e.clipboardData.items;
-  if (!items || items.length === 0) return;
-
   const roomIdx = getActiveRoomIdx();
 
-  // Look for image blob first (most reliable — right-click → Copy Image)
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].type.startsWith('image/')) {
+  // Method 1: Check clipboardData.files (most reliable for Copy Image)
+  if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+    const file = e.clipboardData.files[0];
+    if (file.type.startsWith('image/')) {
       e.preventDefault();
-      const blob = items[i].getAsFile();
       const reader = new FileReader();
       reader.onload = ev => {
         compressImage(ev.target.result, 800, 0.7, compressed => {
@@ -2220,46 +2217,76 @@ document.addEventListener('paste', e => {
           addImageToBoard(compressed, label, roomIdx);
         });
       };
-      reader.readAsDataURL(blob);
+      reader.readAsDataURL(file);
       return;
     }
   }
 
-  // Fallback: check for HTML with an img tag
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].type === 'text/html') {
-      e.preventDefault();
-      items[i].getAsString(html => {
-        const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-        if (match && match[1]) {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = Math.min(img.width, 800);
-            canvas.height = img.height * (canvas.width / img.width);
-            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-            try {
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+  // Method 2: Check clipboardData.items for image blob
+  const items = e.clipboardData && e.clipboardData.items;
+  if (items) {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith('image/')) {
+        e.preventDefault();
+        const blob = items[i].getAsFile();
+        const reader = new FileReader();
+        reader.onload = ev => {
+          compressImage(ev.target.result, 800, 0.7, compressed => {
+            const label = prompt('Label this image (optional):', 'Pasted Image') || 'Pasted Image';
+            addImageToBoard(compressed, label, roomIdx);
+          });
+        };
+        reader.readAsDataURL(blob);
+        return;
+      }
+    }
+
+    // Method 3: HTML with img tag - try to fetch via server proxy
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type === 'text/html') {
+        e.preventDefault();
+        items[i].getAsString(html => {
+          const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+          if (match && match[1]) {
+            // Try to load directly (without crossOrigin to avoid CORS preflight)
+            const img = new Image();
+            img.onload = () => {
+              // Draw to canvas - may fail on tainted canvas but try
+              const canvas = document.createElement('canvas');
+              canvas.width = Math.min(img.width, 800);
+              canvas.height = img.height * (canvas.width / img.width);
+              canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+              try {
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                const label = prompt('Label this image (optional):', 'Pasted Image') || 'Pasted Image';
+                addImageToBoard(dataUrl, label, roomIdx);
+              } catch(err) {
+                // Tainted canvas - save URL directly as a reference
+                const label = prompt('Image is protected. Save as reference?\nLabel:', 'Furniture Reference') || 'Furniture Reference';
+                addImageToBoard(match[1], label, roomIdx);
+              }
+            };
+            img.onerror = () => {
+              // Can't load at all - still save the URL as a clickable reference
+              const label = prompt('Image is protected. Save URL as reference?\nLabel:', 'Furniture Reference') || 'Furniture Reference';
+              addImageToBoard(match[1], label, roomIdx);
+            };
+            img.src = match[1];
+          } else {
+            // Check for plain text URL
+            const urlMatch = html.match(/(https?:\/\/[^\s<"']+\.(jpg|jpeg|png|gif|webp))/i);
+            if (urlMatch) {
               const label = prompt('Label this image (optional):', 'Pasted Image') || 'Pasted Image';
-              addImageToBoard(dataUrl, label, roomIdx);
-            } catch(err) {
-              alert('This image is protected by the source website.\n\nTry: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
+              addImageToBoard(urlMatch[1], label, roomIdx);
+            } else {
+              alert('No image found in clipboard.\n\nMake sure to right-click an image → "Copy Image", then paste here.');
             }
-          };
-          img.onerror = () => {
-            alert('Could not load that image.\n\nTry: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
-          };
-          img.src = match[1];
-        } else {
-          alert('No image found in clipboard. Make sure to right-click an image → "Copy Image", then paste here.');
-        }
-      });
-      return;
+          }
+        });
+        return;
+      }
     }
   }
-
-  alert('No image found in clipboard. Make sure to right-click an image → "Copy Image", then paste here.');
 });
 
 // Existing conditions upload
