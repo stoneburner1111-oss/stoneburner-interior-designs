@@ -249,7 +249,7 @@
     position: relative; overflow: hidden; border-radius: 6px; cursor: pointer; aspect-ratio: 4/3;
     transition: transform 0.5s cubic-bezier(0.25,0.8,0.25,1), box-shadow 0.5s;
   }
-  .project-card:nth-child(1) { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+  .project-card:nth-child(1), .project-card.featured-card { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
   .project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.15); z-index: 2; }
   .project-img {
     position: absolute; inset: 0; background-size: cover; background-position: center;
@@ -894,7 +894,7 @@
     .about-visual { display: none; }
     .services-grid { grid-template-columns: repeat(2, 1fr); }
     .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
-    .project-card:nth-child(1) { grid-column: span 2; aspect-ratio: 16/9; }
+    .project-card:nth-child(1), .project-card.featured-card { grid-column: span 2; aspect-ratio: 16/9; }
     .testimonial-card { min-width: calc(50% - 14px); }
     .contact-inner { grid-template-columns: 1fr; gap: 60px; }
     .hero-award-float { display: none; }
@@ -912,7 +912,7 @@
     .about, .services, .portfolio, .testimonials, .areas, .contact, .ba-section { padding: 80px 24px; }
     .services-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: 1fr; }
-    .project-card:nth-child(1) { grid-column: span 1; grid-row: span 1; aspect-ratio: 4/3; }
+    .project-card:nth-child(1), .project-card.featured-card { grid-column: span 1; grid-row: span 1; aspect-ratio: 4/3; }
     .testimonial-card { min-width: 85vw; }
     .about-stats { grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .stat-num { font-size: 36px; }
@@ -1593,7 +1593,7 @@ function renderPortfolio() {
     delay++;
     const card = document.createElement('div');
     card.className = 'project-card reveal-scale visible';
-    if (delay === 1) { card.style.gridColumn = 'span 2'; card.style.gridRow = 'span 2'; card.style.aspectRatio = 'auto'; }
+    if (delay === 1) { card.classList.add('featured-card'); }
     card.onclick = () => openGallery(ai, 0);
     card.innerHTML = '<div class="project-img" style="background-image:url(\'' + album.photos[0].url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + album.location + '</div><div class="project-name">' + album.name + '</div><div class="project-view">' + album.photos.length + ' Photo' + (album.photos.length > 1 ? 's' : '') + ' — View Project →</div></div>';
     grid.appendChild(card);
