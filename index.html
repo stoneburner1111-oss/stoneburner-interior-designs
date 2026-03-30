@@ -1599,8 +1599,9 @@ function saveSiteAlbums(albums) {
 }
 function renderPortfolio(albumData) {
   var albums = albumData || getSiteAlbums();
-  const grid = document.getElementById('portfolioGrid');
+  var grid = document.getElementById('portfolioGrid');
   if (!grid) return;
+  if (!albumData && !currentRole) return;
   grid.innerHTML = '';
   let delay = 0;
   albums.forEach((album, ai) => {
@@ -1669,8 +1670,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') galleryNav(1);
 });
 
-// Render from defaults first, then DB overwrites
-renderPortfolio(defaultAlbums);
+// Portfolio is server-rendered, only re-render from admin portal
 
 // ===== PORTAL =====
 let currentRole = null;
@@ -2902,10 +2902,8 @@ async function initFromDB() {
     var albums = await DB.get('sid_albums');
     if (albums) {
       localStorage.setItem('sid_albums', JSON.stringify(albums));
-      renderPortfolio(albums);
     } else {
       DB.set('sid_albums', defaultAlbums);
-      renderPortfolio(defaultAlbums);
     }
     var hero = await DB.get('sid_heroSlides');
     if (hero) {
