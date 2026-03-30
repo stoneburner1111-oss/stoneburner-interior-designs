@@ -1081,8 +1081,9 @@
       <h2 class="contact-title">Let's Create Something Beautiful</h2>
       <p class="contact-desc">Whether you're dreaming of a full-home redesign or need help with a single room, we'd love to hear from you. Every project begins with a conversation.</p>
       <div class="contact-details">
+        <div class="contact-item"><div class="contact-item-icon">📞</div><div><div class="contact-item-label">Phone</div><div class="contact-item-text"><a href="tel:2398981452" style="color:var(--terracotta);text-decoration:none;">(239) 898-1452</a></div></div></div>
         <div class="contact-item"><div class="contact-item-icon">✉</div><div><div class="contact-item-label">Email</div><div class="contact-item-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7c4c3d8d9d2d5c2c5d9d2c5ded9c3d2c5ded8c5d3d2c4ded0d9c4f7d6d8db99d4d8da">[email&#160;protected]</a></div></div></div>
-        <div class="contact-item"><div class="contact-item-icon">◉</div><div><div class="contact-item-label">Location</div><div class="contact-item-text">Fort Myers, FL 33908</div></div></div>
+        <div class="contact-item"><div class="contact-item-icon">◉</div><div><div class="contact-item-label">Location</div><div class="contact-item-text">Naples, FL</div></div></div>
         <div class="contact-item"><div class="contact-item-icon">★</div><div><div class="contact-item-label">Recognition</div><div class="contact-item-text">7× Best of Houzz Award Winner<br>Alpha Beta Kappa "Excellence in Design"<br>HomeaRama Parade of Homes Award</div></div></div>
       </div>
     </div>
@@ -1548,9 +1549,9 @@ function updateBA(x) {
 baContainer.addEventListener('mousedown', e => { baDragging = true; updateBA(e.clientX); });
 window.addEventListener('mousemove', e => { if (baDragging) updateBA(e.clientX); });
 window.addEventListener('mouseup', () => baDragging = false);
-baContainer.addEventListener('touchstart', e => { baDragging = true; updateBA(e.touches[0].clientX); }, { passive: true });
-baContainer.addEventListener('touchmove', e => { if (baDragging) updateBA(e.touches[0].clientX); }, { passive: true });
-window.addEventListener('touchend', () => baDragging = false);
+baContainer.addEventListener('touchstart', function(e) { baDragging = true; updateBA(e.touches[0].clientX); e.preventDefault(); }, { passive: false });
+baContainer.addEventListener('touchmove', function(e) { if (baDragging) { updateBA(e.touches[0].clientX); e.preventDefault(); } }, { passive: false });
+window.addEventListener('touchend', function() { baDragging = false; });
 
 // ===== ALBUM DATA & PORTFOLIO =====
 const defaultAlbums = [
@@ -1601,7 +1602,7 @@ function renderPortfolio() {
     delay++;
     const card = document.createElement('div');
     card.className = 'project-card reveal-scale visible';
-    if (delay === 1) { card.style.gridColumn = 'span 2'; card.style.gridRow = 'span 2'; card.style.aspectRatio = 'auto'; }
+    // First card same size as others
     card.onclick = () => openGallery(ai, 0);
     card.innerHTML = '<div class="project-img" style="background-image:url(\'' + album.photos[0].url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + album.location + '</div><div class="project-name">' + album.name + '</div><div class="project-view">' + album.photos.length + ' Photo' + (album.photos.length > 1 ? 's' : '') + ' — View Project →</div></div>';
     grid.appendChild(card);
