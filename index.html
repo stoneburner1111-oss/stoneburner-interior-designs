@@ -245,7 +245,6 @@
   .portfolio-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
   .portfolio-title { font-family: var(--font-display); font-size: clamp(36px, 4vw, 56px); font-weight: 300; line-height: 1.12; color: var(--charcoal); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .portfolio-grid .project-card { aspect-ratio: 4/3; }
   .project-card {
     position: relative; overflow: hidden; border-radius: 6px; cursor: pointer; aspect-ratio: 4/3;
     transition: transform 0.5s cubic-bezier(0.25,0.8,0.25,1), box-shadow 0.5s;
@@ -282,7 +281,7 @@
   .ba-section { padding: 100px 60px; background: var(--cream); }
   .ba-inner { max-width: 1400px; margin: 0 auto; }
   .ba-title { font-family: var(--font-display); font-size: clamp(36px, 4vw, 56px); font-weight: 300; color: var(--charcoal); margin-bottom: 60px; }
-  .ba-container { position: relative; width: 100%; aspect-ratio: 3/2; border-radius: 8px; overflow: hidden; cursor: col-resize; box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+  .ba-container { position: relative; width: 100%; aspect-ratio: 16/7; border-radius: 8px; overflow: hidden; cursor: col-resize; box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
   .ba-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
   .ba-img.after { clip-path: inset(0 0 0 50%); transition: clip-path 0.05s; }
   .ba-handle {
@@ -900,7 +899,7 @@
     .contact-inner { grid-template-columns: 1fr; gap: 60px; }
     .hero-award-float { display: none; }
     .hero-content { grid-template-columns: 1fr; }
-    .hero-slideshow { display: none; }
+    .hero-slideshow { max-height: 50vh; aspect-ratio: 16/10; margin-top: 24px; }
     .portal-sidebar { width: 220px; }
   }
   @media (max-width: 768px) {
@@ -909,6 +908,7 @@
     .nav-links { display: none; }
     .mobile-toggle { display: flex; }
     .hero-content { padding: 0 24px; }
+    .hero-slideshow { max-height: 40vh; aspect-ratio: 16/10; margin-top: 16px; }
     .about, .services, .portfolio, .testimonials, .areas, .contact, .ba-section { padding: 80px 24px; }
     .services-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: 1fr; }
@@ -1022,12 +1022,7 @@
     </div>
   </div>
   <div class="portfolio-grid" id="portfolioGrid">
-    <div class="project-card reveal-scale visible" onclick="openGallery(0,0)"><div class="project-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">Naples, FL</div><div class="project-name">Riverstone</div><div class="project-view">View Project &#8594;</div></div></div>
-    <div class="project-card reveal-scale visible" onclick="openGallery(1,0)"><div class="project-img" style="background-image:url('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">Naples, FL</div><div class="project-name">Royal Harbor</div><div class="project-view">View Project &#8594;</div></div></div>
-    <div class="project-card reveal-scale visible" onclick="openGallery(2,0)"><div class="project-img" style="background-image:url('https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">Fort Myers Beach</div><div class="project-name">Beach Condo Rentals</div><div class="project-view">View Project &#8594;</div></div></div>
-    <div class="project-card reveal-scale visible" onclick="openGallery(3,0)"><div class="project-img" style="background-image:url('https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">Fort Myers</div><div class="project-name">Bayfront</div><div class="project-view">7 Photos &#8212; View Project &#8594;</div></div></div>
-    <div class="project-card reveal-scale visible" onclick="openGallery(4,0)"><div class="project-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">Fort Myers</div><div class="project-name">Shadowood Kitchen</div><div class="project-view">View Project &#8594;</div></div></div>
-    <div class="project-card reveal-scale visible" onclick="openGallery(5,0)"><div class="project-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">Estero, FL</div><div class="project-name">Estero Remodel</div><div class="project-view">View Project &#8594;</div></div></div>
+    <!-- Populated dynamically from album data -->
   </div>
 </section>
 
@@ -1087,9 +1082,8 @@
       <h2 class="contact-title">Let's Create Something Beautiful</h2>
       <p class="contact-desc">Whether you're dreaming of a full-home redesign or need help with a single room, we'd love to hear from you. Every project begins with a conversation.</p>
       <div class="contact-details">
-        <div class="contact-item"><div class="contact-item-icon">📞</div><div><div class="contact-item-label">Phone</div><div class="contact-item-text"><a href="tel:2398981452" style="color:var(--terracotta);text-decoration:none;">(239) 898-1452</a></div></div></div>
         <div class="contact-item"><div class="contact-item-icon">✉</div><div><div class="contact-item-label">Email</div><div class="contact-item-text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7c4c3d8d9d2d5c2c5d9d2c5ded9c3d2c5ded8c5d3d2c4ded0d9c4f7d6d8db99d4d8da">[email&#160;protected]</a></div></div></div>
-        <div class="contact-item"><div class="contact-item-icon">◉</div><div><div class="contact-item-label">Location</div><div class="contact-item-text">Naples, FL</div></div></div>
+        <div class="contact-item"><div class="contact-item-icon">◉</div><div><div class="contact-item-label">Location</div><div class="contact-item-text">Fort Myers, FL 33908</div></div></div>
         <div class="contact-item"><div class="contact-item-icon">★</div><div><div class="contact-item-label">Recognition</div><div class="contact-item-text">7× Best of Houzz Award Winner<br>Alpha Beta Kappa "Excellence in Design"<br>HomeaRama Parade of Homes Award</div></div></div>
       </div>
     </div>
@@ -1288,14 +1282,6 @@
             <button class="room-tab" onclick="switchRoom(2,this)">Master Bath</button>
             <button class="room-tab add-room-btn" onclick="addRoom()">+ Add Room</button>
           </div>
-          <div style="display:flex;gap:8px;margin-bottom:20px;padding:14px 18px;background:white;border:1px solid #E8DFD0;border-radius:8px;flex-wrap:wrap;">
-            <input type="text" id="boardUrlInput" placeholder="Paste URL or click in box below and Cmd+V to paste an image..." style="flex:1;min-width:200px;padding:10px 14px;border:1px solid #E8DFD0;border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:#FAFAF6;" onkeydown="if(event.key==='Enter')addImageFromActiveRoom()">
-            <button class="portal-btn" onclick="addImageFromActiveRoom()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Add URL</button>
-            <button class="portal-btn portal-btn-outline" onclick="document.getElementById('visionUpload').click()" style="font-size:11px;padding:8px 18px;white-space:nowrap;">Upload Image</button>
-            
-            <input type="file" id="visionUpload" accept="image/*" multiple style="display:none" onchange="uploadToActiveRoom(this.files)">
-          </div>
-          <div id="pasteZone" contenteditable="true" style="min-height:60px;padding:16px;border:2px dashed #E8DFD0;border-radius:8px;margin-bottom:20px;font-family:var(--font-body);font-size:13px;color:#6E6E6E;outline:none;background:white;cursor:text;text-align:center;line-height:60px;transition:border-color 0.3s;" onfocus="this.style.borderColor='#C4785B';this.innerHTML=this.innerHTML||''" onblur="this.style.borderColor='#E8DFD0';if(!this.querySelector('img'))this.innerHTML='Click here then Cmd+V to paste an image'" onclick="this.focus()">Click here then Cmd+V to paste an image</div>
           <div id="roomBoards">
             <div class="room-board active">
               <div class="vision-board"><div class="board-items" id="boardItems-0">
@@ -1318,7 +1304,7 @@
         </div>
         <!-- SCOPE TAB -->
         <div class="portal-tab" id="tab-scope" style="display:none;">
-          <div class="portal-main-header"><h2 class="portal-main-title">Scope of Work</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline" onclick="addScopeItem()">+ Add Item</button><button class="portal-btn portal-btn-outline" onclick="clearScope()" style="color:#C44;">Clear All</button></div></div>
+          <div class="portal-main-header"><h2 class="portal-main-title">Scope of Work</h2><button class="portal-btn portal-btn-outline" onclick="addScopeItem()">+ Add Item</button></div>
           <div class="scope-card">
             <div class="scope-card-header"><div class="scope-card-title">Kitchen Remodel</div><span class="scope-status status-active">In Progress</span></div>
             <div class="scope-checklist" id="scopeChecklist">
@@ -1335,10 +1321,10 @@
         </div>
         <!-- NOTES TAB -->
         <div class="portal-tab" id="tab-notes" style="display:none;">
-          <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><div style="display:flex;gap:8px;"><button class="portal-btn portal-btn-outline">Export to PDF</button><button class="portal-btn portal-btn-outline" onclick="clearNotes()" style="color:#C44;">Clear All</button></div></div>
+          <div class="portal-main-header"><h2 class="portal-main-title">Shared Notes</h2><button class="portal-btn portal-btn-outline">Export to PDF</button></div>
           <div class="notes-area">
             <div class="notes-toolbar"><button class="notes-tool-btn"><b>B</b></button><button class="notes-tool-btn"><i>I</i></button><button class="notes-tool-btn"><u>U</u></button><button class="notes-tool-btn">☰</button></div>
-            <textarea class="notes-textarea" oninput="saveNotes(activeProject)">Henderson Kitchen — Meeting Notes (3/25/26)
+            <textarea class="notes-textarea">Henderson Kitchen — Meeting Notes (3/25/26)
 
 • Client prefers warm whites over cool tones
 • Keep existing island footprint, extend countertop for bar seating
@@ -1446,28 +1432,45 @@ ACTION ITEMS:
 </div>
 
 <script>
-// ===== DATABASE LAYER =====
-var DB = {
+// ===== DATABASE SYNC LAYER =====
+// Writes to both localStorage (instant) and PostgreSQL API (cross-device sync)
+const DB = {
   async get(key) {
     try {
-      var res = await fetch('/api/data/' + encodeURIComponent(key));
-      var data = await res.json();
-      if (data.value !== null) {
-        localStorage.setItem(key, JSON.stringify(data.value));
-        return data.value;
-      }
-    } catch(e) {}
-    // Fallback to localStorage
-    try { var s = localStorage.getItem(key); if (s) return JSON.parse(s); } catch(e) {}
-    return null;
+      const res = await fetch('/api/data/' + encodeURIComponent(key));
+      const data = await res.json();
+      return data.value;
+    } catch(e) { console.warn('DB get error:', key, e); return null; }
   },
   async set(key, value) {
+    // Always write localStorage for instant local access
     try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) {}
-    try { await fetch('/api/data/' + encodeURIComponent(key), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({value:value}) }); } catch(e) {}
+    // Write to DB for cross-device sync
+    try {
+      await fetch('/api/data/' + encodeURIComponent(key), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: value })
+      });
+    } catch(e) { console.warn('DB set error:', key, e); }
   },
-  async del(key) {
+  async delete(key) {
     try { localStorage.removeItem(key); } catch(e) {}
-    try { await fetch('/api/data/' + encodeURIComponent(key), { method:'DELETE' }); } catch(e) {}
+    try {
+      await fetch('/api/data/' + encodeURIComponent(key), { method: 'DELETE' });
+    } catch(e) { console.warn('DB delete error:', key, e); }
+  },
+  async loadAll() {
+    // Pull all site data from DB into localStorage so sync code works
+    const keys = ['sid_albums', 'sid_heroSlides', 'sid_baBefore', 'sid_baAfter'];
+    for (const key of keys) {
+      try {
+        const val = await DB.get(key);
+        if (val !== null && val !== undefined) {
+          localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val));
+        }
+      } catch(e) { console.warn('DB loadAll error for', key, e); }
+    }
   }
 };
 
@@ -1540,25 +1543,6 @@ function slideTestimonials(dir) {
   slider.style.transform = `translateX(${testPos}px)`;
 }
 
-// ===== BEFORE/AFTER SLIDER =====
-const baContainer = document.getElementById('baContainer');
-const baAfter = document.getElementById('baAfter');
-const baHandle = document.getElementById('baHandle');
-let baDragging = false;
-function updateBA(x) {
-  const rect = baContainer.getBoundingClientRect();
-  let pct = ((x - rect.left) / rect.width) * 100;
-  pct = Math.max(5, Math.min(95, pct));
-  baAfter.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
-  baHandle.style.left = pct + '%';
-}
-baContainer.addEventListener('mousedown', e => { baDragging = true; updateBA(e.clientX); });
-window.addEventListener('mousemove', e => { if (baDragging) updateBA(e.clientX); });
-window.addEventListener('mouseup', () => baDragging = false);
-baContainer.addEventListener('touchstart', function(e) { baDragging = true; updateBA(e.touches[0].clientX); e.preventDefault(); }, { passive: false });
-baContainer.addEventListener('touchmove', function(e) { if (baDragging) { updateBA(e.touches[0].clientX); e.preventDefault(); } }, { passive: false });
-window.addEventListener('touchend', function() { baDragging = false; });
-
 // ===== ALBUM DATA & PORTFOLIO =====
 const defaultAlbums = [
   { name: 'Riverstone', location: 'Naples, FL', key: 'riverstone', visible: true, photos: [
@@ -1598,11 +1582,10 @@ function saveSiteAlbums(albums) {
   try { localStorage.setItem('sid_albums', JSON.stringify(albums)); } catch(e) {}
   DB.set('sid_albums', albums);
 }
-function renderPortfolio(albumData) {
-  var albums = albumData || getSiteAlbums();
-  var grid = document.getElementById('portfolioGrid');
+function renderPortfolio() {
+  const albums = getSiteAlbums();
+  const grid = document.getElementById('portfolioGrid');
   if (!grid) return;
-  if (!albumData && !currentRole) return;
   grid.innerHTML = '';
   let delay = 0;
   albums.forEach((album, ai) => {
@@ -1610,7 +1593,7 @@ function renderPortfolio(albumData) {
     delay++;
     const card = document.createElement('div');
     card.className = 'project-card reveal-scale visible';
-    // all cards same size
+    if (delay === 1) { card.style.gridColumn = 'span 2'; card.style.gridRow = 'span 2'; card.style.aspectRatio = 'auto'; }
     card.onclick = () => openGallery(ai, 0);
     card.innerHTML = '<div class="project-img" style="background-image:url(\'' + album.photos[0].url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + album.location + '</div><div class="project-name">' + album.name + '</div><div class="project-view">' + album.photos.length + ' Photo' + (album.photos.length > 1 ? 's' : '') + ' — View Project →</div></div>';
     grid.appendChild(card);
@@ -1671,7 +1654,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') galleryNav(1);
 });
 
-// Portfolio is server-rendered, only re-render from admin portal
+// Portfolio rendered after DB sync — see initFromDB() at end of file
 
 // ===== PORTAL =====
 let currentRole = null;
@@ -1684,13 +1667,10 @@ let portalUsers = [
   { name: 'Beth', user: 'beth', pass: 'design2026', role: 'designer', admin: false }
 ];
 
-let defaultProjects = [
+let projects = [
   { name: 'Henderson Kitchen Remodel', client: 'Henderson Residence', location: 'Fort Myers', type: 'Kitchen Remodel', status: 'In Progress', img: 'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg', rooms: ['Kitchen','Living Room','Master Bath'], budget: 45000 },
   { name: 'Bayshore Condo', client: 'Bayshore', location: 'Naples', type: 'Full Home Design', status: 'Design Phase', img: 'https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg', rooms: ['Living Room','Bedroom'], budget: 22000 }
 ];
-function getProjects() { try { var s = localStorage.getItem('sid_projects'); if (s) return JSON.parse(s); } catch(e) {} return defaultProjects; }
-function saveProjects() { try { localStorage.setItem('sid_projects', JSON.stringify(projects)); } catch(e) {} DB.set('sid_projects', projects); }
-var projects = getProjects();
 
 function openPortal() {
   document.getElementById('portal').classList.add('active');
@@ -1831,7 +1811,7 @@ function renderFolders() {
     card.innerHTML = '<div class="folder-cover" style="' + coverStyle + '">' + (coverUrl ? '' : '📁') + '</div>'
       + '<div class="folder-name">' + album.name + '</div>'
       + '<div class="folder-count">' + album.photos.length + ' photo' + (album.photos.length !== 1 ? 's' : '') + ' · ' + album.location + '</div>'
-      + '<button class="folder-delete" onclick="event.stopPropagation();editFolder(\'' + album.key + '\')" title="Edit folder" style="right:40px;">&#9998;</button><button class="folder-delete" onclick="event.stopPropagation();deleteFolder(\'' + album.key + '\')" title="Delete folder">✕</button>';
+      + '<button class="folder-delete" onclick="event.stopPropagation();deleteFolder(\'' + album.key + '\')" title="Delete folder">✕</button>';
     setupFolderCardDrag(card);
     grid.appendChild(card);
   });
@@ -1892,12 +1872,12 @@ function setupFolderCardDrag(el) {
       else el.parentNode.insertBefore(dragFolderEl, el);
     }
   });
+  // Replace onclick with click that checks for drag
   el.onclick = null;
   el.addEventListener('click', () => {
-    if (not_dragged()) openFolderDetail(el.dataset.folderKey);
+    if (!folderWasDragged) openFolderDetail(el.dataset.folderKey);
   });
 }
-function not_dragged() { return folderWasDragged === false; }
 function saveFolderOrder() {
   const grid = document.getElementById('folderGrid');
   const cards = grid.querySelectorAll('.folder-card');
@@ -2000,21 +1980,6 @@ function renameFolderPhoto(albumKey, photoIdx, newName) {
   }
 }
 
-function editFolder(albumKey) {
-  var albums = getSiteAlbums();
-  var album = albums.find(function(a) { return a.key === albumKey; });
-  if (!album) return;
-  var newName = prompt('Project name:', album.name);
-  if (!newName) return;
-  var newLoc = prompt('Location:', album.location);
-  if (newLoc === null) return;
-  album.name = newName;
-  album.location = newLoc;
-  saveSiteAlbums(albums);
-  renderFolders();
-  renderPortfolio();
-}
-
 function deleteFolder(albumKey) {
   const albums = getSiteAlbums();
   const album = albums.find(a => a.key === albumKey);
@@ -2082,47 +2047,11 @@ function saveFolderPhotoOrder() {
   renderPortfolio();
 }
 
-// Enable dragging images from external websites onto vision boards
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.board-drop-zone').forEach(function(zone) {
-    zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
-    zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
-    zone.addEventListener('drop', function(e) {
-      e.preventDefault();
-      zone.classList.remove('dragover');
-      // Check for dragged image URL from another website
-      var html = e.dataTransfer.getData('text/html');
-      var text = e.dataTransfer.getData('text/plain');
-      var imgUrl = '';
-      if (html) {
-        var match = html.match(/src=["']([^"']+)["']/);
-        if (match) imgUrl = match[1];
-      }
-      if (!imgUrl && text && text.match(/^https?:.*\.(jpg|jpeg|png|gif|webp|svg)/i)) {
-        imgUrl = text;
-      }
-      if (!imgUrl && text && text.match(/^https?:/)) {
-        imgUrl = text;
-      }
-      if (imgUrl) {
-        var boardItems = zone.closest('.board-items');
-        if (boardItems) {
-          var roomIdx = boardItems.id.replace('boardItems-','');
-          addUrlImageToBoard(imgUrl, imgUrl.split('/').pop().split('?')[0].substring(0,30), parseInt(roomIdx) || 0);
-        }
-      }
-    });
-  });
-});
-
-
-
 // Initialize folders on load
 renderFolders();
 
 function openProject(idx) {
   activeProject = idx;
-  setTimeout(function() { loadVisionBoard(idx); loadScopeItems(idx); loadNotes(idx); loadBudgetItems(idx); }, 50);
   document.getElementById('projectDashboard').style.display = 'none';
   const ws = document.getElementById('projectWorkspace');
   ws.style.display = 'flex';
@@ -2151,7 +2080,6 @@ function createProject() {
   if (!name) return;
   const idx = projects.length;
   projects.push({ name, client, location, type, status: 'New', img: '', rooms: ['Room 1'], budget: 0 });
-  saveProjects();
   const card = document.createElement('div');
   card.className = 'proj-card';
   card.dataset.projIdx = idx;
@@ -2171,211 +2099,12 @@ function deleteProject(idx, btn) {
   if (!confirm('This cannot be undone. Delete "' + name + '" permanently?')) return;
   // Remove from array
   projects[idx] = null;
-  saveProjects();
   // Remove card from DOM
   const card = btn.closest('.proj-card');
   if (card) card.remove();
 }
 
 // Room vision boards
-// ===== PROJECT DATA PERSISTENCE =====
-function saveVisionBoard(projIdx) {
-  var boards = [];
-  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
-  tabs.forEach(function(tab, i) {
-    var boardEl = document.getElementById('boardItems-' + i);
-    var items = [];
-    if (boardEl) {
-      boardEl.querySelectorAll('.board-item').forEach(function(item) {
-        var inner = item.querySelector('.board-item-inner');
-        var label = item.querySelector('.board-item-label');
-        var imgEl = inner ? inner.querySelector('img') : null;
-        var bg = inner ? inner.style.backgroundImage : '';
-        var src = '';
-        if (imgEl) src = imgEl.src;
-        else if (bg) src = bg.replace(/url\(['"]?|['"]?\)/g, '');
-        if (src || (label && label.textContent)) {
-          items.push({ src: src, label: label ? label.textContent : '' });
-        }
-      });
-    }
-    boards.push({ name: tab.textContent, items: items });
-  });
-  try { localStorage.setItem('sid_proj_' + projIdx + '_vision', JSON.stringify(boards)); } catch(e) {}
-  DB.set('sid_proj_' + projIdx + '_vision', boards);
-}
-
-function loadVisionBoard(projIdx) {
-  try {
-    var data = localStorage.getItem('sid_proj_' + projIdx + '_vision');
-    if (!data) return false;
-    var boards = JSON.parse(data);
-    if (!boards || boards.length === 0) return false;
-    // Rebuild room tabs
-    var tabBar = document.querySelector('.room-tabs');
-    if (!tabBar) return false;
-    tabBar.innerHTML = '';
-    boards.forEach(function(room, i) {
-      var tab = document.createElement('button');
-      tab.className = 'room-tab' + (i === 0 ? ' active' : '');
-      tab.textContent = room.name;
-      tab.onclick = function() { switchRoom(i, tab); };
-      tabBar.appendChild(tab);
-    });
-    var addBtn = document.createElement('button');
-    addBtn.className = 'room-tab add-room-btn';
-    addBtn.textContent = '+';
-    addBtn.onclick = addRoom;
-    tabBar.appendChild(addBtn);
-    // Rebuild boards
-    var container = document.getElementById('roomBoards');
-    if (!container) return false;
-    container.innerHTML = '';
-    boards.forEach(function(room, i) {
-      var boardDiv = document.createElement('div');
-      boardDiv.className = 'board-items';
-      boardDiv.id = 'boardItems-' + i;
-      boardDiv.style.display = (i === 0) ? 'grid' : 'none';
-      room.items.forEach(function(item) {
-        var el = document.createElement('div');
-        el.className = 'board-item';
-        el.draggable = true;
-        var inner = document.createElement('div');
-        inner.className = 'board-item-inner';
-        if (item.src) {
-          if (item.src.startsWith('data:') || item.src.match(/\.(jpg|jpeg|png|gif|webp)/i)) {
-            inner.style.padding = '0';
-            inner.style.overflow = 'hidden';
-            var img = document.createElement('img');
-            img.src = item.src;
-            img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-            inner.appendChild(img);
-          } else {
-            inner.style.backgroundImage = "url('" + item.src + "')";
-          }
-        }
-        el.appendChild(inner);
-        var lbl = document.createElement('div');
-        lbl.className = 'board-item-label';
-        lbl.textContent = item.label;
-        el.appendChild(lbl);
-        var btn = document.createElement('button');
-        btn.className = 'board-item-remove';
-        btn.textContent = 'x';
-        btn.onclick = function(e) { e.stopPropagation(); el.remove(); saveVisionBoard(activeProject); };
-        el.appendChild(btn);
-        boardDiv.appendChild(el);
-      });
-      // Add drop zone
-      var dz = document.createElement('div');
-      dz.className = 'board-drop-zone';
-      dz.onclick = function() { dz.querySelector('input').click(); };
-      dz.innerHTML = '<span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,' + i + ')">';
-      boardDiv.appendChild(dz);
-      container.appendChild(boardDiv);
-    });
-    return true;
-  } catch(e) { return false; }
-}
-
-function saveScopeItems(projIdx) {
-  var items = [];
-  document.querySelectorAll('#scopeChecklist .scope-check-item').forEach(function(item) {
-    var cb = item.querySelector('input[type="checkbox"]');
-    var label = item.querySelector('.scope-check-label');
-    if (label) items.push({ text: label.textContent, done: cb ? cb.checked : false });
-  });
-  try { localStorage.setItem('sid_proj_' + projIdx + '_scope', JSON.stringify(items)); } catch(e) {}
-  DB.set('sid_proj_' + projIdx + '_scope', items);
-}
-
-function loadScopeItems(projIdx) {
-  try {
-    var data = localStorage.getItem('sid_proj_' + projIdx + '_scope');
-    if (!data) return false;
-    var items = JSON.parse(data);
-    var list = document.getElementById('scopeChecklist');
-    if (!list) return false;
-    list.innerHTML = '';
-    items.forEach(function(item) {
-      var el = document.createElement('div');
-      el.className = 'scope-check-item';
-      el.innerHTML = '<input type="checkbox"' + (item.done ? ' checked' : '') + ' onchange="saveScopeItems(' + projIdx + ')"><span class="scope-check-label">' + item.text + '</span><button class="scope-check-remove" onclick="this.parentElement.remove();saveScopeItems(' + projIdx + ')">x</button>';
-      list.appendChild(el);
-    });
-    return true;
-  } catch(e) { return false; }
-}
-
-function saveNotes(projIdx) {
-  var ta = document.querySelector('.notes-textarea');
-  if (ta) {
-    try { localStorage.setItem('sid_proj_' + projIdx + '_notes', ta.value); } catch(e) {}
-    DB.set('sid_proj_' + projIdx + '_notes', ta.value);
-  }
-}
-
-function loadNotes(projIdx) {
-  try {
-    var data = localStorage.getItem('sid_proj_' + projIdx + '_notes');
-    if (data === null) return false;
-    var ta = document.querySelector('.notes-textarea');
-    if (ta) { ta.value = data; return true; }
-    return false;
-  } catch(e) { return false; }
-}
-
-function saveBudgetItems(projIdx) {
-  var items = [];
-  document.querySelectorAll('#budgetTable .budget-row').forEach(function(row) {
-    var cells = row.querySelectorAll('input');
-    if (cells.length >= 4) {
-      items.push({
-        name: cells[0].value,
-        cost: cells[1].value,
-        qty: cells[2].value,
-        markup: cells[3].value
-      });
-    }
-  });
-  try { localStorage.setItem('sid_proj_' + projIdx + '_budget', JSON.stringify(items)); } catch(e) {}
-  DB.set('sid_proj_' + projIdx + '_budget', items);
-}
-
-function loadBudgetItems(projIdx) {
-  try {
-    var data = localStorage.getItem('sid_proj_' + projIdx + '_budget');
-    if (!data) return false;
-    var items = JSON.parse(data);
-    var table = document.getElementById('budgetTable');
-    if (!table) return false;
-    table.innerHTML = '';
-    items.forEach(function(item) {
-      addBudgetRowWithData(item.name, item.cost, item.qty, item.markup);
-    });
-    return true;
-  } catch(e) { return false; }
-}
-
-function addBudgetRowWithData(name, cost, qty, markup) {
-  var table = document.getElementById('budgetTable');
-  if (!table) return;
-  var row = document.createElement('div');
-  row.className = 'budget-row';
-  row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 0.5fr 0.5fr 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #f0ebe0;';
-  var costNum = parseFloat(cost) || 0;
-  var qtyNum = parseFloat(qty) || 1;
-  var markupNum = parseFloat(markup) || 30;
-  var total = (costNum * qtyNum * (1 + markupNum/100)).toFixed(2);
-  row.innerHTML = '<input style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (name||'') + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
-    + '<input type="number" style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (cost||'') + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
-    + '<input type="number" style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (qty||1) + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
-    + '<input type="number" style="padding:8px;border:1px solid #E8DFD0;border-radius:4px;font-size:13px;" value="' + (markup||30) + '" onchange="saveBudgetItems(activeProject);updateBudgetTotals()">'
-    + '<span style="font-weight:500;color:var(--charcoal);">$' + total + '</span>'
-    + '<button onclick="this.parentElement.remove();saveBudgetItems(activeProject);updateBudgetTotals()" style="background:none;border:none;color:#C44;cursor:pointer;font-size:16px;">x</button>';
-  table.appendChild(row);
-}
-
 function switchRoom(idx, btn) {
   document.querySelectorAll('.room-tab:not(.add-room-btn)').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -2403,7 +2132,6 @@ function addRoom() {
   switchRoom(idx, tab);
 }
 function handleRoomUpload(files, roomIdx) {
-  setTimeout(function() { saveVisionBoard(activeProject); }, 500);
   Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
@@ -2420,183 +2148,6 @@ function handleRoomUpload(files, roomIdx) {
 }
 
 // Existing conditions upload
-// URL image paste and external drag for vision boards
-// Paste zone handler - captures Cmd+V with actual pasted images
-var pasteZone = document.getElementById('pasteZone');
-if (pasteZone) {
-  pasteZone.addEventListener('paste', function(e) {
-    var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
-    var activeIdx = 0;
-    tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
-    // Let the paste happen naturally first
-    setTimeout(function() {
-      // Check if an image was pasted into the contentEditable
-      var imgs = pasteZone.querySelectorAll('img');
-      if (imgs.length > 0) {
-        imgs.forEach(function(img) {
-          // Convert to data URL via canvas to avoid blob/cors issues
-          var cvs = document.createElement('canvas');
-          var tryConvert = function() {
-            try {
-              cvs.width = img.naturalWidth || img.width || 400;
-              cvs.height = img.naturalHeight || img.height || 300;
-              var ctx = cvs.getContext('2d');
-              ctx.drawImage(img, 0, 0);
-              var dataUrl = cvs.toDataURL('image/jpeg', 0.85);
-              addUrlImageToBoard(dataUrl, 'Pasted Image', activeIdx);
-            } catch(e) {
-              // Canvas tainted - use src directly
-              addUrlImageToBoard(img.src, 'Pasted Image', activeIdx);
-            }
-          };
-          if (img.complete) {
-            tryConvert();
-          } else {
-            img.onload = tryConvert;
-          }
-        });
-        pasteZone.innerHTML = 'Added! Paste another...';
-        setTimeout(function() { pasteZone.innerHTML = 'Click here, then Cmd+V to paste an image'; }, 2000);
-        return;
-      }
-      // Check for pasted text (URL)
-      var text = pasteZone.textContent.trim();
-      if (text.match(/^https?:\/\//)) {
-        addUrlImageToBoard(text, text.split('/').pop().split('?')[0].substring(0,30), activeIdx);
-        pasteZone.innerHTML = 'Added! Paste another...';
-        setTimeout(function() { pasteZone.innerHTML = 'Click here, then Cmd+V to paste an image'; }, 2000);
-        return;
-      }
-      // Nothing useful pasted
-      if (pasteZone.textContent === 'Click here, then Cmd+V to paste an image') return;
-      pasteZone.innerHTML = 'Could not read image. Try: Save Image As, then Upload.';
-      setTimeout(function() { pasteZone.innerHTML = 'Click here, then Cmd+V to paste an image'; }, 3000);
-    }, 100);
-  });
-}
-function uploadToActiveRoom(files) {
-  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
-  var activeIdx = 0;
-  tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
-  handleRoomUpload(files, activeIdx);
-}
-function addImageFromActiveRoom() {
-  var input = document.getElementById('boardUrlInput');
-  if (!input || !input.value.trim()) return;
-  // Find active room index
-  var tabs = document.querySelectorAll('.room-tab:not(.add-room-btn)');
-  var activeIdx = 0;
-  tabs.forEach(function(t, i) { if (t.classList.contains('active')) activeIdx = i; });
-  var url = input.value.trim();
-  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)/i) || url.startsWith('data:')) {
-    addUrlImageToBoard(url, url.split('/').pop().split('?')[0], activeIdx);
-  } else {
-    var img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = function() { addUrlImageToBoard(url, 'Product Image', activeIdx); };
-    img.onerror = function() { addLinkCardToBoard(url, activeIdx); };
-    img.src = url;
-  }
-  input.value = '';
-}
-
-function addImageFromUrl(roomIdx) {
-  var input = document.getElementById('boardUrlInput-' + roomIdx);
-  if (!input) return;
-  var url = input.value.trim();
-  if (!url) return;
-  // If it looks like an image URL, use directly
-  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)/i) || url.startsWith('data:')) {
-    addUrlImageToBoard(url, url.split('/').pop().split('?')[0], roomIdx);
-    input.value = '';
-    return;
-  }
-  // Otherwise try loading it as an image anyway (many product images work)
-  var img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = function() {
-    addUrlImageToBoard(url, 'Product Image', roomIdx);
-    input.value = '';
-  };
-  img.onerror = function() {
-    // If direct load fails, still add as a link card
-    addLinkCardToBoard(url, roomIdx);
-    input.value = '';
-  };
-  img.src = url;
-}
-
-function addUrlImageToBoard(url, label, roomIdx) {
-  setTimeout(function() { saveVisionBoard(activeProject); }, 200);
-  var board = document.getElementById('boardItems-' + roomIdx);
-  if (!board) return;
-  var dropZone = board.querySelector('.board-drop-zone');
-  var item = document.createElement('div');
-  item.className = 'board-item';
-  item.draggable = true;
-
-  var inner = document.createElement('div');
-  inner.className = 'board-item-inner';
-  inner.style.padding = '0';
-  inner.style.overflow = 'hidden';
-
-  var img = document.createElement('img');
-  img.src = url;
-  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-  img.onerror = function() {
-    inner.removeChild(img);
-    inner.style.background = 'linear-gradient(135deg,#D4C4A0,#BFA67A)';
-    inner.style.padding = '20px';
-    inner.style.display = 'flex';
-    inner.style.flexDirection = 'column';
-    inner.style.alignItems = 'center';
-    inner.style.justifyContent = 'center';
-    inner.style.gap = '8px';
-    inner.style.cursor = 'pointer';
-    var domain = '';
-    try { domain = new URL(url).hostname.replace('www.',''); } catch(e) { domain = url.substring(0,30); }
-    var icon = document.createElement('span');
-    icon.style.fontSize = '24px';
-    icon.textContent = '\u{1F517}';
-    var text = document.createElement('span');
-    text.style.cssText = 'font-size:11px;color:white;word-break:break-all;text-align:center;';
-    text.textContent = domain;
-    inner.appendChild(icon);
-    inner.appendChild(text);
-    inner.onclick = function() { window.open(url, '_blank'); };
-  };
-  inner.appendChild(img);
-  item.appendChild(inner);
-
-  var lbl = document.createElement('div');
-  lbl.className = 'board-item-label';
-  lbl.textContent = label;
-  item.appendChild(lbl);
-
-  var btn = document.createElement('button');
-  btn.className = 'board-item-remove';
-  btn.textContent = 'x';
-  btn.onclick = function(e) { e.stopPropagation(); item.remove(); };
-  item.appendChild(btn);
-
-  board.insertBefore(item, dropZone);
-}
-
-function addLinkCardToBoard(url, roomIdx) {
-  var board = document.getElementById('boardItems-' + roomIdx);
-  if (!board) return;
-  var dropZone = board.querySelector('.board-drop-zone');
-  var domain = '';
-  try { domain = new URL(url).hostname.replace('www.',''); } catch(e) { domain = url.substring(0,30); }
-  var item = document.createElement('div');
-  item.className = 'board-item';
-  item.draggable = true;
-  item.style.cursor = 'pointer';
-  item.onclick = function() { window.open(url, '_blank'); };
-  item.innerHTML = '<div class="board-item-inner" style="background:linear-gradient(135deg,#D4C4A0,#BFA67A);flex-direction:column;gap:8px;padding:20px;"><span style="font-size:24px;">&#128279;</span><span style="font-size:12px;color:white;word-break:break-all;">' + domain + '</span></div><div class="board-item-label">' + domain + '</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">x</button>';
-  board.insertBefore(item, dropZone);
-}
-
 function handleCondUpload(files) {
   Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
@@ -2614,18 +2165,7 @@ function handleCondUpload(files) {
 }
 
 // Scope
-function clearScope() {
-  if (!confirm('Clear all scope items? This cannot be undone.')) return;
-  var list = document.getElementById('scopeChecklist');
-  if (list) list.innerHTML = '';
-}
-function clearNotes() {
-  if (!confirm('Clear all notes? This cannot be undone.')) return;
-  var ta = document.querySelector('.notes-textarea');
-  if (ta) ta.value = '';
-}
 function addScopeItem() {
-  setTimeout(function() { saveScopeItems(activeProject); }, 100);
   const text = prompt('Scope item:');
   if (!text) return;
   const item = document.createElement('div');
@@ -2802,8 +2342,8 @@ function saveBAState() {
     const before = document.getElementById('baBefore');
     const after = document.getElementById('baAfter');
     if (before && after) {
-      var bUrl = before.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '');
-      var aUrl = after.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '');
+      const bUrl = before.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '');
+      const aUrl = after.style.backgroundImage.replace(/url\(['"]?|['"]?\)/g, '');
       localStorage.setItem('sid_baBefore', bUrl);
       localStorage.setItem('sid_baAfter', aUrl);
       DB.set('sid_baBefore', bUrl);
@@ -2897,43 +2437,18 @@ function removeHeroSlide(idx) {
   saveHeroState();
 }
 
-// Load data from database on page startup
+// ===== INIT: Load from DB then render =====
 async function initFromDB() {
   try {
-    var albums = await DB.get('sid_albums');
-    if (albums) {
-      localStorage.setItem('sid_albums', JSON.stringify(albums));
-    } else {
-      DB.set('sid_albums', defaultAlbums);
-    }
-    var hero = await DB.get('sid_heroSlides');
-    if (hero) {
-      localStorage.setItem('sid_heroSlides', JSON.stringify(hero));
-    }
-    var projects = await DB.get('sid_projects');
-    if (projects) {
-      localStorage.setItem('sid_projects', JSON.stringify(projects));
-    }
-    loadSavedState();
+    await DB.loadAll();
+    console.log('DB sync complete');
   } catch(e) {
-    loadSavedState();
+    console.warn('DB sync failed, using localStorage/defaults:', e);
   }
+  loadSavedState();
+  renderPortfolio();
 }
-// Load saved state on page load
-loadSavedState();
 initFromDB();
-
-// Build email to bypass Cloudflare obfuscation
-var eEl = document.getElementById('emailDisplay');
-if (eEl) {
-  var a = document.createElement('a');
-  var u = 'stoneburnerinteriordesigns';
-  var d = 'aol.com';
-  a.href = 'mai' + 'lto:' + u + '@' + d;
-  a.textContent = u + '@' + d;
-  a.style.cssText = 'color:var(--terracotta);text-decoration:none;word-break:break-word;';
-  eEl.appendChild(a);
-}
 
 // ===== SMOOTH SCROLL =====
 document.querySelectorAll('a[href^="#"]').forEach(a => {
