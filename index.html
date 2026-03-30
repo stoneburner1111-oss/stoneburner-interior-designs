@@ -897,6 +897,7 @@
     .project-card:nth-child(1), .project-card.featured-card { grid-column: span 2; aspect-ratio: 16/9; }
     .testimonial-card { min-width: calc(50% - 14px); }
     .contact-inner { grid-template-columns: 1fr; gap: 60px; }
+    .hero { height: auto; min-height: unset; padding: 120px 0 60px; }
     .hero-award-float { display: none; }
     .hero-content { grid-template-columns: 1fr; }
     .hero-slideshow { max-height: 50vh; aspect-ratio: 16/10; margin-top: 24px; }
@@ -907,6 +908,7 @@
     .nav.scrolled { padding: 12px 24px; }
     .nav-links { display: none; }
     .mobile-toggle { display: flex; }
+    .hero { height: auto; min-height: unset; padding: 100px 0 40px; align-items: flex-start; }
     .hero-content { padding: 0 24px; }
     .hero-slideshow { max-height: 40vh; aspect-ratio: 16/10; margin-top: 16px; }
     .about, .services, .portfolio, .testimonials, .areas, .contact, .ba-section { padding: 80px 24px; }
@@ -923,6 +925,7 @@
     .portal-main { padding: 20px; }
     .scope-details { grid-template-columns: 1fr; }
     .hero-indicators { display: none; }
+    .ba-container { aspect-ratio: 4/3; }
   }
 </style>
 </head>
@@ -2454,6 +2457,33 @@ initFromDB();
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => { const href = a.getAttribute('href'); if (href === '#' || href.length < 2) return; e.preventDefault(); const t = document.querySelector(href); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 });
+
+// ===== BEFORE/AFTER SLIDER INTERACTION =====
+(function() {
+  const container = document.getElementById('baContainer');
+  const handle = document.getElementById('baHandle');
+  const afterImg = document.getElementById('baAfter');
+  if (!container || !handle || !afterImg) return;
+  let dragging = false;
+
+  function updateSlider(x) {
+    const rect = container.getBoundingClientRect();
+    let pct = ((x - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    handle.style.left = pct + '%';
+    afterImg.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+  }
+
+  // Mouse events
+  container.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; updateSlider(e.clientX); });
+  document.addEventListener('mousemove', e => { if (dragging) updateSlider(e.clientX); });
+  document.addEventListener('mouseup', () => { dragging = false; });
+
+  // Touch events
+  container.addEventListener('touchstart', e => { dragging = true; updateSlider(e.touches[0].clientX); }, { passive: true });
+  document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); updateSlider(e.touches[0].clientX); } }, { passive: false });
+  document.addEventListener('touchend', () => { dragging = false; });
+})();
 </script>
 </body>
 </html>
