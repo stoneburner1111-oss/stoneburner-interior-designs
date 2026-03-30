@@ -906,8 +906,10 @@
   @media (max-width: 768px) {
     .nav { padding: 16px 24px; }
     .nav.scrolled { padding: 12px 24px; }
-    .nav-links { display: none; }
-    .mobile-toggle { display: flex; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a { font-size: 10px; letter-spacing: 1.5px; }
+    .nav-cta { padding: 8px 14px !important; font-size: 9px !important; }
+    .mobile-toggle { display: none !important; }
     .hero { height: auto; min-height: unset; padding: 100px 0 40px; align-items: flex-start; }
     .hero-content { padding: 0 24px; }
     .hero-slideshow { max-height: 40vh; aspect-ratio: 16/10; margin-top: 16px; }
