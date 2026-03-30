@@ -1664,8 +1664,9 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') galleryNav(1);
 });
 
-// Render portfolio on page load
-renderPortfolio();
+// Clear stale album cache and render from defaults first
+localStorage.removeItem('sid_albums');
+renderPortfolio(defaultAlbums);
 
 // ===== PORTAL =====
 let currentRole = null;
@@ -2897,8 +2898,10 @@ async function initFromDB() {
     var albums = await DB.get('sid_albums');
     if (albums) {
       localStorage.setItem('sid_albums', JSON.stringify(albums));
+      renderPortfolio(albums);
     } else {
       DB.set('sid_albums', defaultAlbums);
+      renderPortfolio(defaultAlbums);
     }
     var hero = await DB.get('sid_heroSlides');
     if (hero) {
@@ -2909,7 +2912,6 @@ async function initFromDB() {
       localStorage.setItem('sid_projects', JSON.stringify(projects));
     }
     loadSavedState();
-    renderPortfolio();
   } catch(e) {
     loadSavedState();
   }
