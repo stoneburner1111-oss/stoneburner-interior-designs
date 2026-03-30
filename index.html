@@ -245,6 +245,7 @@
   .portfolio-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
   .portfolio-title { font-family: var(--font-display); font-size: clamp(36px, 4vw, 56px); font-weight: 300; line-height: 1.12; color: var(--charcoal); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .portfolio-grid .project-card { aspect-ratio: 4/3; }
   .project-card {
     position: relative; overflow: hidden; border-radius: 6px; cursor: pointer; aspect-ratio: 4/3;
     transition: transform 0.5s cubic-bezier(0.25,0.8,0.25,1), box-shadow 0.5s;
@@ -1602,7 +1603,7 @@ function renderPortfolio() {
     delay++;
     const card = document.createElement('div');
     card.className = 'project-card reveal-scale visible';
-    // First card same size as others
+    // all cards same size
     card.onclick = () => openGallery(ai, 0);
     card.innerHTML = '<div class="project-img" style="background-image:url(\'' + album.photos[0].url + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + album.location + '</div><div class="project-name">' + album.name + '</div><div class="project-view">' + album.photos.length + ' Photo' + (album.photos.length > 1 ? 's' : '') + ' — View Project →</div></div>';
     grid.appendChild(card);
@@ -2912,6 +2913,18 @@ async function initFromDB() {
 // Load saved state on page load
 loadSavedState();
 initFromDB();
+
+// Build email to bypass Cloudflare obfuscation
+var eEl = document.getElementById('emailDisplay');
+if (eEl) {
+  var a = document.createElement('a');
+  var u = 'stoneburnerinteriordesigns';
+  var d = 'aol.com';
+  a.href = 'mai' + 'lto:' + u + '@' + d;
+  a.textContent = u + '@' + d;
+  a.style.cssText = 'color:var(--terracotta);text-decoration:none;word-break:break-word;';
+  eEl.appendChild(a);
+}
 
 // ===== SMOOTH SCROLL =====
 document.querySelectorAll('a[href^="#"]').forEach(a => {
