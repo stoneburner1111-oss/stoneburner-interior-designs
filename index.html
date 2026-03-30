@@ -281,7 +281,7 @@
   .ba-section { padding: 100px 60px; background: var(--cream); }
   .ba-inner { max-width: 1400px; margin: 0 auto; }
   .ba-title { font-family: var(--font-display); font-size: clamp(36px, 4vw, 56px); font-weight: 300; color: var(--charcoal); margin-bottom: 60px; }
-  .ba-container { position: relative; width: 100%; aspect-ratio: 16/7; border-radius: 8px; overflow: hidden; cursor: col-resize; box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+  .ba-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; cursor: col-resize; box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
   .ba-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
   .ba-img.after { clip-path: inset(0 0 0 50%); transition: clip-path 0.05s; }
   .ba-handle {
@@ -336,6 +336,7 @@
   .testimonial-card:hover::before { height: 120px; }
   .testimonial-stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 3px; }
   .testimonial-quote { font-size: 48px; font-family: var(--font-display); color: var(--terracotta); line-height: 1; margin-bottom: 12px; opacity: 0.6; }
+  .testimonial-closing-quote { font-size: 48px; font-family: var(--font-display); color: var(--terracotta); line-height: 1; margin-top: 12px; text-align: right; opacity: 0.6; }
   .testimonial-text { font-size: 15px; line-height: 1.85; color: var(--text-light); font-weight: 300; margin-bottom: 28px; font-style: italic; }
   .testimonial-author { font-size: 13px; font-weight: 500; color: var(--charcoal); letter-spacing: 1px; text-transform: uppercase; }
   .testimonials-controls { display: flex; gap: 8px; margin-top: 32px; }
@@ -1077,11 +1078,11 @@
     <h2 class="testimonials-title reveal" data-delay="1">What Our Clients Say</h2>
     <div class="testimonials-track">
       <div class="testimonials-slider" id="testSlider">
-        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">She listened to me and developed a plan based on my likes and needs, and worked to incorporate current furniture pieces and accessories into the plan. Suzanne was on top of everything throughout the project.</p><div class="testimonial-author">Kathy Demaray</div></div>
-        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">Suzanne is very professional, superb Interior Designer. She is easy to work with, and very conscientious about getting patterns, color flows, and structural components just right.</p><div class="testimonial-author">Terry</div></div>
-        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">She helped us redecorate our new carriage home, including remodeling the kitchen. She is very responsive and always available. Much of the work was done in our absence and she took care of everything.</p><div class="testimonial-author">Houzz Client</div></div>
-        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">Suzanne created a beautiful design that is functional as well. She totally transformed an office that was overcrowded, too gray, and boring. Now I have much more space that enables make-sense organization.</p><div class="testimonial-author">Houzz Client</div></div>
-        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">Suzanne is amazing. Our newly built home is just beautiful thanks to her! Suzanne's creativity and design expertise really shine in every detail of our home.</p><div class="testimonial-author">Leslie Pumper</div></div>
+        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">She listened to me and developed a plan based on my likes and needs, and worked to incorporate current furniture pieces and accessories into the plan. Suzanne was on top of everything throughout the project.</p><div class="testimonial-closing-quote">”</div><div class="testimonial-author">Kathy Demaray</div></div>
+        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">Suzanne is very professional, superb Interior Designer. She is easy to work with, and very conscientious about getting patterns, color flows, and structural components just right.</p><div class="testimonial-closing-quote">”</div><div class="testimonial-author">Terry</div></div>
+        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">She helped us redecorate our new carriage home, including remodeling the kitchen. She is very responsive and always available. Much of the work was done in our absence and she took care of everything.</p><div class="testimonial-closing-quote">”</div><div class="testimonial-author">Houzz Client</div></div>
+        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">Suzanne created a beautiful design that is functional as well. She totally transformed an office that was overcrowded, too gray, and boring. Now I have much more space that enables make-sense organization.</p><div class="testimonial-closing-quote">”</div><div class="testimonial-author">Houzz Client</div></div>
+        <div class="testimonial-card"><div class="testimonial-stars">★ ★ ★ ★ ★</div><div class="testimonial-quote">“</div><p class="testimonial-text">Suzanne is amazing. Our newly built home is just beautiful thanks to her! Suzanne's creativity and design expertise really shine in every detail of our home.</p><div class="testimonial-closing-quote">”</div><div class="testimonial-author">Leslie Pumper</div></div>
       </div>
     </div>
     <div class="testimonials-controls reveal" data-delay="2">
