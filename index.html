@@ -963,9 +963,9 @@
       </div>
     </div>
     <div class="hero-slideshow">
-      <div class="hero-slide active" style="background-image: url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w1200-h800-b0-p0---.jpg')"></div>
-      <div class="hero-slide" style="background-image: url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w1200-h800-b0-p0---.jpg')"></div>
-      <div class="hero-slide" style="background-image: url('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w1200-h800-b0-p0---.jpg')"></div>
+      <div class="hero-slide active" style="background-image: url('/images/riverstone-living.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('/images/estero-remodel.jpg')"></div>
+      <div class="hero-slide" style="background-image: url('/images/royal-harbor-kitchen.jpg')"></div>
       <div class="hero-award-float">
         <div class="hero-award-num">7×</div>
         <div class="hero-award-label">Best of Houzz Winner</div>
@@ -991,7 +991,7 @@
     </div>
     <div class="about-visual reveal-right" data-delay="2">
       <div class="about-img-main">
-        <img src="https://st.hzcdn.com/simgs/36c14a59002c19d1_9-2929/image.jpg" alt="Suzanne Stoneburner" loading="lazy">
+        <img src="/images/suzanne-portrait.jpg" alt="Suzanne Stoneburner" loading="lazy">
       </div>
       <div class="about-accent"></div>
       <div class="about-accent-glow"></div>
@@ -1035,8 +1035,8 @@
     <div class="section-tag reveal" style="justify-content:center;">The Transformation</div>
     <h2 class="ba-title reveal" data-delay="1" style="text-align:center;">Before & After</h2>
     <div class="ba-container reveal-scale" data-delay="2" id="baContainer">
-      <div class="ba-img" id="baBefore" style="background-image: url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"></div>
-      <div class="ba-img after" id="baAfter" style="background-image: url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div>
+      <div class="ba-img" id="baBefore" style="background-image: url('/images/shadowood-kitchen.jpg')"></div>
+      <div class="ba-img after" id="baAfter" style="background-image: url('/images/bayfront-kitchen.jpg')"></div>
       <div class="ba-handle" id="baHandle"></div>
       <div class="ba-label before">Before</div>
       <div class="ba-label after">After</div>
@@ -1169,11 +1169,11 @@
         </div>
         <div class="project-cards" id="projectCards">
           <div class="proj-card" data-proj-idx="0" onclick="openProject(0)">
-            <div class="proj-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg')"><span class="proj-card-status status-active">In Progress</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(0,this)" style="display:none;">✕</button></div>
+            <div class="proj-card-img" style="background-image:url('/images/shadowood-kitchen.jpg')"><span class="proj-card-status status-active">In Progress</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(0,this)" style="display:none;">✕</button></div>
             <div class="proj-card-body"><div class="proj-card-name">Henderson Kitchen Remodel</div><div class="proj-card-client">Henderson Residence · Fort Myers</div><div class="proj-card-meta"><span>4 Rooms</span><span>Budget: $45,000</span></div></div>
           </div>
           <div class="proj-card" data-proj-idx="1" onclick="openProject(1)">
-            <div class="proj-card-img" style="background-image:url('https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg')"><span class="proj-card-status status-pending">Design Phase</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(1,this)" style="display:none;">✕</button></div>
+            <div class="proj-card-img" style="background-image:url('/images/bayfront-living.jpg')"><span class="proj-card-status status-pending">Design Phase</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(1,this)" style="display:none;">✕</button></div>
             <div class="proj-card-body"><div class="proj-card-name">Bayshore Condo</div><div class="proj-card-client">Bayshore · Naples</div><div class="proj-card-meta"><span>2 Rooms</span><span>Budget: $22,000</span></div></div>
           </div>
           <div class="new-proj-card admin-only" onclick="showCreateProject()" style="display:none;"><span class="new-proj-icon">+</span>Create New Project</div>
@@ -1189,9 +1189,9 @@
           <div class="scope-card-header"><div class="scope-card-title">Hero Slides — Landing Page</div><button class="portal-btn" onclick="applyHeroChanges()" id="heroSaveBtn" style="font-size:11px; padding:8px 18px;">Save & Apply</button></div>
           <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Control which photos appear on the landing page hero and adjust zoom.</p>
           <div id="heroSlideManager" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:16px;">
-            <div class="photo-card" data-hero="0"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w1200-h800-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Riverstone — Living Room"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(0,this.value)" oninput="updateHeroZoom(0,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 1</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
-            <div class="photo-card" data-hero="1"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w1200-h800-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Estero — Remodel"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(1,this.value)" oninput="updateHeroZoom(1,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 2</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
-            <div class="photo-card" data-hero="2"><div class="photo-card-img" style="background-image:url('https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w1200-h800-b0-p0---.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Royal Harbor — Kitchen"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(2,this.value)" oninput="updateHeroZoom(2,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 3</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
+            <div class="photo-card" data-hero="0"><div class="photo-card-img" style="background-image:url('/images/riverstone-living.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Riverstone — Living Room"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(0,this.value)" oninput="updateHeroZoom(0,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 1</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
+            <div class="photo-card" data-hero="1"><div class="photo-card-img" style="background-image:url('/images/estero-remodel.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Estero — Remodel"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(1,this.value)" oninput="updateHeroZoom(1,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 2</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
+            <div class="photo-card" data-hero="2"><div class="photo-card-img" style="background-image:url('/images/royal-harbor-kitchen.jpg')"></div><div class="photo-card-body"><input class="photo-card-label" value="Royal Harbor — Kitchen"><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><label style="font-size:11px; color:var(--text-light);">ZOOM:</label><input type="range" min="100" max="140" value="102" style="flex:1; accent-color:var(--terracotta);" onchange="updateHeroZoom(2,this.value)" oninput="updateHeroZoom(2,this.value)"><span class="hero-zoom-val" style="font-size:12px; color:var(--text-light);">102%</span></div><div class="photo-card-actions" style="margin-top:8px;"><span style="font-size:11px; color:var(--olive); font-weight:500;">Slide 3</span><button class="photo-action-btn delete" onclick="this.closest('.photo-card').remove()">Remove</button></div></div></div>
           </div>
         </div>
 
@@ -1199,8 +1199,8 @@
         <div class="scope-card" style="margin-bottom:20px;">
           <div class="scope-card-header"><div class="scope-card-title">Before & After Slider</div><button class="portal-btn" onclick="applyBAChanges()" id="baSaveBtn" style="font-size:11px; padding:8px 18px;">Save & Apply</button></div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
-            <div><div class="scope-detail-label" style="margin-bottom:8px;">Before Photo</div><div id="baBeforePreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg'); border:2px solid var(--sand);"></div></div>
-            <div><div class="scope-detail-label" style="margin-bottom:8px;">After Photo</div><div id="baAfterPreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg'); border:2px solid var(--terracotta);"></div></div>
+            <div><div class="scope-detail-label" style="margin-bottom:8px;">Before Photo</div><div id="baBeforePreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('/images/shadowood-kitchen.jpg'); border:2px solid var(--sand);"></div></div>
+            <div><div class="scope-detail-label" style="margin-bottom:8px;">After Photo</div><div id="baAfterPreview" style="width:100%; aspect-ratio:16/9; border-radius:6px; background-size:cover; background-position:center; background-image:url('/images/bayfront-kitchen.jpg'); border:2px solid var(--terracotta);"></div></div>
           </div>
         </div>
 
@@ -1288,7 +1288,7 @@
           <div id="roomBoards">
             <div class="room-board active">
               <div class="vision-board"><div class="board-items" id="boardItems-0">
-                <div class="board-item" draggable="true"><div class="board-item-inner" style="background-image:url('https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg')"></div><div class="board-item-label">Kitchen Inspiration</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
+                <div class="board-item" draggable="true"><div class="board-item-inner" style="background-image:url('/images/bayfront-kitchen.jpg')"></div><div class="board-item-label">Kitchen Inspiration</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
                 <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
               </div></div>
             </div>
@@ -1549,28 +1549,28 @@ function slideTestimonials(dir) {
 // ===== ALBUM DATA & PORTFOLIO =====
 const defaultAlbums = [
   { name: 'Riverstone', location: 'Naples, FL', key: 'riverstone', visible: true, photos: [
-    { url: 'https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg', label: 'Riverstone — Living Room' }
+    { url: '/images/riverstone-living.jpg', label: 'Riverstone — Living Room' }
   ]},
   { name: 'Royal Harbor', location: 'Naples, FL', key: 'royal-harbor', visible: true, photos: [
-    { url: 'https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg', label: 'Royal Harbor — Kitchen' }
+    { url: '/images/royal-harbor-kitchen.jpg', label: 'Royal Harbor — Kitchen' }
   ]},
   { name: 'Beach Condo Rentals', location: 'Fort Myers Beach', key: 'beach-condo', visible: true, photos: [
-    { url: 'https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg', label: 'Beach Condo — Living' }
+    { url: '/images/beach-condo-living.jpg', label: 'Beach Condo — Living' }
   ]},
   { name: 'Bayfront', location: 'Fort Myers', key: 'bayfront', visible: true, photos: [
-    { url: 'https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg', label: 'Bayfront — Entry' },
-    { url: 'https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg', label: 'Bayfront — Living Room' },
-    { url: 'https://st.hzcdn.com/simgs/b911d9d7089a4042_9-4721/home-design.jpg', label: 'Bayfront — Bedroom' },
-    { url: 'https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg', label: 'Bayfront — Kitchen' },
-    { url: 'https://st.hzcdn.com/simgs/1da143cd089a404e_9-4727/home-design.jpg', label: 'Bayfront — Dining' },
-    { url: 'https://st.hzcdn.com/simgs/2b31dae3089b7f14_14-9021/home-design.jpg', label: 'Bayfront — View 2' },
-    { url: 'https://st.hzcdn.com/simgs/4881299d0f3668bc_14-9415/home-design.jpg', label: 'Bayfront — Exterior' }
+    { url: '/images/bayfront-entry.jpg', label: 'Bayfront — Entry' },
+    { url: '/images/bayfront-living.jpg', label: 'Bayfront — Living Room' },
+    { url: '/images/bayfront-bedroom.jpg', label: 'Bayfront — Bedroom' },
+    { url: '/images/bayfront-kitchen.jpg', label: 'Bayfront — Kitchen' },
+    { url: '/images/bayfront-dining.jpg', label: 'Bayfront — Dining' },
+    { url: '/images/bayfront-view2.jpg', label: 'Bayfront — View 2' },
+    { url: '/images/bayfront-exterior.jpg', label: 'Bayfront — Exterior' }
   ]},
   { name: 'Shadowood Kitchen', location: 'Fort Myers', key: 'shadowood', visible: true, photos: [
-    { url: 'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg', label: 'Shadowood — Kitchen Remodel' }
+    { url: '/images/shadowood-kitchen.jpg', label: 'Shadowood — Kitchen Remodel' }
   ]},
   { name: 'Estero Remodel', location: 'Estero, FL', key: 'estero', visible: true, photos: [
-    { url: 'https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg', label: 'Estero — Full Remodel' }
+    { url: '/images/estero-remodel.jpg', label: 'Estero — Full Remodel' }
   ]}
 ];
 
@@ -1671,8 +1671,8 @@ let portalUsers = [
 ];
 
 let projects = [
-  { name: 'Henderson Kitchen Remodel', client: 'Henderson Residence', location: 'Fort Myers', type: 'Kitchen Remodel', status: 'In Progress', img: 'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg', rooms: ['Kitchen','Living Room','Master Bath'], budget: 45000 },
-  { name: 'Bayshore Condo', client: 'Bayshore', location: 'Naples', type: 'Full Home Design', status: 'Design Phase', img: 'https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg', rooms: ['Living Room','Bedroom'], budget: 22000 }
+  { name: 'Henderson Kitchen Remodel', client: 'Henderson Residence', location: 'Fort Myers', type: 'Kitchen Remodel', status: 'In Progress', img: '/images/shadowood-kitchen.jpg', rooms: ['Kitchen','Living Room','Master Bath'], budget: 45000 },
+  { name: 'Bayshore Condo', client: 'Bayshore', location: 'Naples', type: 'Full Home Design', status: 'Design Phase', img: '/images/bayfront-living.jpg', rooms: ['Living Room','Bedroom'], budget: 22000 }
 ];
 
 function openPortal() {
@@ -2441,6 +2441,59 @@ function removeHeroSlide(idx) {
 }
 
 // ===== INIT: Load from DB then render =====
+// One-time migration: replace Houzz CDN URLs with local paths
+const houzzToLocal = {
+  'https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w1200-h800-b0-p0---.jpg': '/images/riverstone-living.jpg',
+  'https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg': '/images/riverstone-living.jpg',
+  'https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w1200-h800-b0-p0---.jpg': '/images/royal-harbor-kitchen.jpg',
+  'https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg': '/images/royal-harbor-kitchen.jpg',
+  'https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w1200-h800-b0-p0---.jpg': '/images/estero-remodel.jpg',
+  'https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg': '/images/estero-remodel.jpg',
+  'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg': '/images/shadowood-kitchen.jpg',
+  'https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg': '/images/beach-condo-living.jpg',
+  'https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg': '/images/bayfront-entry.jpg',
+  'https://st.hzcdn.com/simgs/8f71b0ba089a403c_9-4720/home-design.jpg': '/images/bayfront-living.jpg',
+  'https://st.hzcdn.com/simgs/b911d9d7089a4042_9-4721/home-design.jpg': '/images/bayfront-bedroom.jpg',
+  'https://st.hzcdn.com/simgs/db11ee88089a4048_9-4722/home-design.jpg': '/images/bayfront-kitchen.jpg',
+  'https://st.hzcdn.com/simgs/1da143cd089a404e_9-4727/home-design.jpg': '/images/bayfront-dining.jpg',
+  'https://st.hzcdn.com/simgs/2b31dae3089b7f14_14-9021/home-design.jpg': '/images/bayfront-view2.jpg',
+  'https://st.hzcdn.com/simgs/4881299d0f3668bc_14-9415/home-design.jpg': '/images/bayfront-exterior.jpg',
+  'https://st.hzcdn.com/simgs/36c14a59002c19d1_9-2929/image.jpg': '/images/suzanne-portrait.jpg'
+};
+function migrateHouzzUrls() {
+  let changed = false;
+  // Migrate albums
+  let albums = getSiteAlbums();
+  albums.forEach(album => {
+    album.photos.forEach(photo => {
+      if (houzzToLocal[photo.url]) { photo.url = houzzToLocal[photo.url]; changed = true; }
+    });
+  });
+  if (changed) { saveSiteAlbums(albums); console.log('Migrated album Houzz URLs to local'); }
+  // Migrate hero slides
+  try {
+    const heroRaw = localStorage.getItem('sid_heroSlides');
+    if (heroRaw && heroRaw.includes('hzcdn')) {
+      const heroData = JSON.parse(heroRaw);
+      heroData.forEach(s => { if (houzzToLocal[s.url]) s.url = houzzToLocal[s.url]; });
+      localStorage.setItem('sid_heroSlides', JSON.stringify(heroData));
+      DB.set('sid_heroSlides', heroData);
+      console.log('Migrated hero Houzz URLs to local');
+    }
+  } catch(e) {}
+  // Migrate B&A
+  ['sid_baBefore', 'sid_baAfter'].forEach(key => {
+    try {
+      const val = localStorage.getItem(key);
+      if (val && houzzToLocal[val]) {
+        localStorage.setItem(key, houzzToLocal[val]);
+        DB.set(key, houzzToLocal[val]);
+        console.log('Migrated ' + key + ' to local');
+      }
+    } catch(e) {}
+  });
+}
+
 async function initFromDB() {
   try {
     await DB.loadAll();
@@ -2448,6 +2501,7 @@ async function initFromDB() {
   } catch(e) {
     console.warn('DB sync failed, using localStorage/defaults:', e);
   }
+  migrateHouzzUrls();
   loadSavedState();
   renderPortfolio();
 }
