@@ -1595,9 +1595,10 @@ function getSiteAlbums() {
 }
 function saveSiteAlbums(albums) {
   try { localStorage.setItem('sid_albums', JSON.stringify(albums)); } catch(e) {}
+  DB.set('sid_albums', albums);
 }
-function renderPortfolio() {
-  const albums = getSiteAlbums();
+function renderPortfolio(albumData) {
+  var albums = albumData || getSiteAlbums();
   const grid = document.getElementById('portfolioGrid');
   if (!grid) return;
   grid.innerHTML = '';
