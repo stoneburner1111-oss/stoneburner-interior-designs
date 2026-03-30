@@ -13,7 +13,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Create table on startup
 pool.query(`
   CREATE TABLE IF NOT EXISTS site_store (
     key TEXT PRIMARY KEY,
@@ -22,7 +21,6 @@ pool.query(`
   )
 `).then(() => console.log('DB ready')).catch(console.error);
 
-// GET a value by key
 app.get('/api/data/:key', async (req, res) => {
   try {
     const result = await pool.query('SELECT value FROM site_store WHERE key = $1', [req.params.key]);
@@ -34,7 +32,6 @@ app.get('/api/data/:key', async (req, res) => {
   }
 });
 
-// SET a value by key
 app.post('/api/data/:key', async (req, res) => {
   try {
     await pool.query(
@@ -49,7 +46,6 @@ app.post('/api/data/:key', async (req, res) => {
   }
 });
 
-// GET all keys with prefix
 app.get('/api/keys/:prefix', async (req, res) => {
   try {
     const result = await pool.query("SELECT key, value FROM site_store WHERE key LIKE $1", [req.params.prefix + '%']);
@@ -62,7 +58,6 @@ app.get('/api/keys/:prefix', async (req, res) => {
   }
 });
 
-// DELETE a key
 app.delete('/api/data/:key', async (req, res) => {
   try {
     await pool.query('DELETE FROM site_store WHERE key = $1', [req.params.key]);
@@ -73,17 +68,8 @@ app.delete('/api/data/:key', async (req, res) => {
   }
 });
 
-// Fallback to index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
-});
-    let html = require('fs').readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-    html = html.replace(/(<div class="portfolio-grid" id="portfolioGrid">)[\s\S]*?(<\/div>\s*<\/section>)/, '$1' + cards + '$2');
-    res.send(html);
-  } catch(err) {
-    console.error(err);
-    res.sendFile(path.join(__dirname, 'index.html'));
-  }
 });
 
 const PORT = process.env.PORT || 3000;
