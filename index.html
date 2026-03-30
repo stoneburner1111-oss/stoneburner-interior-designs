@@ -1493,7 +1493,7 @@ const DB = {
   },
   async loadAll() {
     // Pull all site data from DB into localStorage so sync code works
-    const keys = ['sid_albums', 'sid_heroSlides', 'sid_baBefore', 'sid_baAfter'];
+    const keys = ['sid_albums', 'sid_heroSlides', 'sid_baBefore', 'sid_baAfter', 'sid_projects'];
     for (const key of keys) {
       try {
         const val = await DB.get(key);
@@ -1698,10 +1698,49 @@ let portalUsers = [
   { name: 'Beth', user: 'beth', pass: 'design2026', role: 'designer', admin: false }
 ];
 
-let projects = [
+const defaultProjects = [
   { name: 'Henderson Kitchen Remodel', client: 'Henderson Residence', location: 'Fort Myers', type: 'Kitchen Remodel', status: 'In Progress', img: '/images/shadowood-kitchen.jpg', rooms: ['Kitchen','Living Room','Master Bath'], budget: 45000 },
   { name: 'Bayshore Condo', client: 'Bayshore', location: 'Naples', type: 'Full Home Design', status: 'Design Phase', img: '/images/bayfront-living.jpg', rooms: ['Living Room','Bedroom'], budget: 22000 }
 ];
+let projects = defaultProjects.slice();
+
+function getProjects() {
+  try {
+    const saved = localStorage.getItem('sid_projects');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return null;
+}
+function saveProjects() {
+  const clean = projects.filter(p => p !== null);
+  try { localStorage.setItem('sid_projects', JSON.stringify(clean)); } catch(e) {}
+  DB.set('sid_projects', clean);
+}
+function renderProjectCards() {
+  const grid = document.getElementById('projectCards');
+  if (!grid) return;
+  const newBtn = grid.querySelector('.new-proj-card');
+  // Remove existing project cards (not the new button)
+  grid.querySelectorAll('.proj-card').forEach(c => c.remove());
+  // Render from array
+  projects.forEach((proj, idx) => {
+    if (!proj) return;
+    const card = document.createElement('div');
+    card.className = 'proj-card';
+    card.dataset.projIdx = idx;
+    card.onclick = () => openProject(idx);
+    const statusClass = proj.status === 'In Progress' ? 'status-active' : proj.status === 'Design Phase' ? 'status-pending' : '';
+    const statusStyle = !statusClass ? 'background:rgba(191,166,122,0.15);color:#8A7040;' : '';
+    const imgStyle = proj.img ? "background-image:url('" + proj.img + "')" : 'background:var(--sand)';
+    card.innerHTML = '<div class="proj-card-img" style="' + imgStyle + '"><span class="proj-card-status ' + statusClass + '" style="' + statusStyle + '">' + proj.status + '</span><button class="proj-delete admin-only" onclick="event.stopPropagation();deleteProject(' + idx + ',this)" style="display:none;">✕</button></div>'
+      + '<div class="proj-card-body"><div class="proj-card-name">' + proj.name + '</div><div class="proj-card-client">' + proj.client + ' · ' + proj.location + '</div><div class="proj-card-meta"><span>' + (proj.rooms ? proj.rooms.length : 0) + ' Rooms</span><span>Budget: $' + (proj.budget || 0).toLocaleString() + '</span></div></div>';
+    grid.insertBefore(card, newBtn);
+  });
+  // Re-apply role visibility
+  if (currentRole) {
+    document.getElementById('portalBody').className = 'portal-body role-' + currentRole;
+  }
+}
 
 function openPortal() {
   document.getElementById('portal').classList.add('active');
@@ -2109,16 +2148,9 @@ function createProject() {
   const location = document.getElementById('npLocation').value.trim();
   const type = document.getElementById('npType').value;
   if (!name) return;
-  const idx = projects.length;
   projects.push({ name, client, location, type, status: 'New', img: '', rooms: ['Room 1'], budget: 0 });
-  const card = document.createElement('div');
-  card.className = 'proj-card';
-  card.dataset.projIdx = idx;
-  card.onclick = () => openProject(idx);
-  card.innerHTML = `<div class="proj-card-img" style="background:var(--sand);"><span class="proj-card-status" style="background:rgba(191,166,122,0.15);color:#8A7040;">New</span><button class="proj-delete" onclick="event.stopPropagation();deleteProject(${idx},this)">✕</button></div><div class="proj-card-body"><div class="proj-card-name">${name}</div><div class="proj-card-client">${client} · ${location}</div><div class="proj-card-meta"><span>${type}</span></div></div>`;
-  const grid = document.getElementById('projectCards');
-  const newBtn = grid.querySelector('.new-proj-card');
-  grid.insertBefore(card, newBtn);
+  saveProjects();
+  renderProjectCards();
   document.getElementById('createProjModal').classList.remove('active');
   document.getElementById('npName').value = '';
   document.getElementById('npClient').value = '';
@@ -2128,11 +2160,9 @@ function deleteProject(idx, btn) {
   const name = projects[idx] ? projects[idx].name : 'this project';
   if (!confirm('Are you sure you want to delete "' + name + '"?')) return;
   if (!confirm('This cannot be undone. Delete "' + name + '" permanently?')) return;
-  // Remove from array
   projects[idx] = null;
-  // Remove card from DOM
-  const card = btn.closest('.proj-card');
-  if (card) card.remove();
+  saveProjects();
+  renderProjectCards();
 }
 
 // Room vision boards
@@ -2663,6 +2693,12 @@ async function initFromDB() {
     console.warn('DB sync failed, using localStorage/defaults:', e);
   }
   migrateHouzzUrls();
+  // Load saved projects
+  const savedProjects = getProjects();
+  if (savedProjects && savedProjects.length > 0) {
+    projects = savedProjects;
+    renderProjectCards();
+  }
   loadSavedState();
   renderPortfolio();
 }
