@@ -461,6 +461,24 @@
   .board-drop-icon { font-size: 32px; opacity: 0.35; transition: transform 0.3s; }
   .board-drop-zone:hover .board-drop-icon { transform: scale(1.15); }
   .board-drop-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .paste-hint {
+    display: flex; align-items: center; gap: 10px; padding: 12px 18px;
+    background: rgba(107,123,94,0.08); border: 1px solid rgba(107,123,94,0.15);
+    border-radius: 8px; margin-bottom: 16px; font-size: 13px; color: var(--text-light);
+  }
+  .paste-hint kbd {
+    display: inline-block; padding: 2px 8px; background: white; border: 1px solid var(--sand);
+    border-radius: 4px; font-family: var(--font-body); font-size: 12px; font-weight: 500;
+    color: var(--charcoal); box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .paste-flash {
+    animation: pasteFlash 0.6s ease;
+  }
+  @keyframes pasteFlash {
+    0% { box-shadow: 0 0 0 0 rgba(107,123,94,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(107,123,94,0.15); }
+    100% { box-shadow: 0 0 0 0 rgba(107,123,94,0); }
+  }
 
   /* Scope */
   .scope-card { background: white; border: 1px solid var(--sand); border-radius: 8px; padding: 28px; margin-bottom: 16px; transition: all 0.3s; }
@@ -1291,20 +1309,21 @@
             <button class="room-tab add-room-btn" onclick="addRoom()">+ Add Room</button>
           </div>
           <div id="roomBoards">
+            <div class="paste-hint">💡 <span>Copy any image from a furniture site (right-click → Copy Image), then press <kbd>⌘V</kbd> or <kbd>Ctrl+V</kbd> here to add it to the board</span></div>
             <div class="room-board active">
               <div class="vision-board"><div class="board-items" id="boardItems-0">
                 <div class="board-item" draggable="true"><div class="board-item-inner" style="background-image:url('/images/bayfront-kitchen.jpg')"></div><div class="board-item-label">Kitchen Inspiration</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></div>
-                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
+                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Upload or Click</strong>Paste images with ⌘V<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,0)"></div>
               </div></div>
             </div>
             <div class="room-board" style="display:none;">
               <div class="vision-board"><div class="board-items" id="boardItems-1">
-                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,1)"></div>
+                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Upload or Click</strong>Paste images with ⌘V<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,1)"></div>
               </div></div>
             </div>
             <div class="room-board" style="display:none;">
               <div class="vision-board"><div class="board-items" id="boardItems-2">
-                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,2)"></div>
+                <div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Upload or Click</strong>Paste images with ⌘V<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,2)"></div>
               </div></div>
             </div>
           </div>
@@ -2135,7 +2154,7 @@ function addRoom() {
   const board = document.createElement('div');
   board.className = 'room-board';
   board.style.display = 'none';
-  board.innerHTML = `<div class="vision-board"><div class="board-items" id="boardItems-${idx}"><div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Add to board</strong>Images or product links<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,${idx})"></div></div></div>`;
+  board.innerHTML = `<div class="vision-board"><div class="board-items" id="boardItems-${idx}"><div class="board-drop-zone" onclick="this.querySelector('input').click()"><span class="board-drop-icon">+</span><strong>Upload or Click</strong>Paste images with ⌘V<input type="file" accept="image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="handleRoomUpload(this.files,${idx})"></div></div></div>`;
   boards.appendChild(board);
   switchRoom(idx, tab);
 }
@@ -2144,16 +2163,99 @@ function handleRoomUpload(files, roomIdx) {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = e => {
-      const board = document.getElementById('boardItems-' + roomIdx);
-      const dropZone = board.querySelector('.board-drop-zone');
-      const item = document.createElement('div');
-      item.className = 'board-item'; item.draggable = true;
-      item.innerHTML = `<div class="board-item-inner" style="background-image:url('${e.target.result}')"></div><div class="board-item-label">${file.name.replace(/\.[^/.]+$/,'')}</div><button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>`;
-      board.insertBefore(item, dropZone);
+      compressImage(e.target.result, 800, 0.7, compressed => {
+        addImageToBoard(compressed, file.name.replace(/\.[^/.]+$/, ''), roomIdx);
+      });
     };
     reader.readAsDataURL(file);
   });
 }
+
+function addImageToBoard(dataUrl, label, roomIdx) {
+  const board = document.getElementById('boardItems-' + roomIdx);
+  if (!board) return;
+  const dropZone = board.querySelector('.board-drop-zone');
+  const item = document.createElement('div');
+  item.className = 'board-item paste-flash';
+  item.draggable = true;
+  item.innerHTML = '<div class="board-item-inner" style="background-image:url(\'' + dataUrl + '\')"></div>'
+    + '<div class="board-item-label">' + label + '</div>'
+    + '<button class="board-item-remove" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>';
+  board.insertBefore(item, dropZone);
+  setTimeout(() => item.classList.remove('paste-flash'), 600);
+}
+
+function getActiveRoomIdx() {
+  const boards = document.querySelectorAll('.room-board');
+  for (let i = 0; i < boards.length; i++) {
+    if (boards[i].style.display !== 'none') return i;
+  }
+  return 0;
+}
+
+// Clipboard paste → vision board
+document.addEventListener('paste', e => {
+  // Only handle when vision board tab is visible
+  const visionTab = document.getElementById('tab-vision');
+  if (!visionTab || visionTab.style.display === 'none') return;
+
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+
+  let handled = false;
+  const roomIdx = getActiveRoomIdx();
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+
+    // Direct image blob (right-click → Copy Image)
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      handled = true;
+      const blob = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = ev => {
+        compressImage(ev.target.result, 800, 0.7, compressed => {
+          const label = prompt('Label this image (optional):', 'Pasted Image') || 'Pasted Image';
+          addImageToBoard(compressed, label, roomIdx);
+        });
+      };
+      reader.readAsDataURL(blob);
+      break;
+    }
+
+    // HTML with embedded image (some sites copy as HTML)
+    if (item.type === 'text/html') {
+      item.getAsString(html => {
+        const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (match && match[1]) {
+          // Try to load the image (may fail due to CORS)
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.min(img.width, 800);
+            canvas.height = img.height * (canvas.width / img.width);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            try {
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+              const label = prompt('Label this image (optional):', 'Pasted Image') || 'Pasted Image';
+              addImageToBoard(dataUrl, label, roomIdx);
+            } catch(err) {
+              alert('This image is protected by the source website. Try: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
+            }
+          };
+          img.onerror = () => {
+            alert('Could not load that image. Try: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
+          };
+          img.src = match[1];
+        }
+      });
+      if (!handled) { e.preventDefault(); handled = true; }
+      break;
+    }
+  }
+});
 
 // Existing conditions upload
 function handleCondUpload(files) {
