@@ -73,9 +73,38 @@ app.delete('/api/data/:key', async (req, res) => {
   }
 });
 
-// Fallback to index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Serve index with server-rendered portfolio
+app.get('*', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT value FROM site_store WHERE key = 'sid_albums'");
+    let albums = null;
+    if (result.rows.length > 0) {
+      albums = result.rows[0].value;
+    }
+    if (!albums) {
+      albums = [
+        { name: 'Riverstone', location: 'Naples, FL', visible: true, photos: [{ url: 'https://st.hzcdn.com/fimgs/b3d18818026d795e_7325-w800-h600-b0-p0---.jpg' }] },
+        { name: 'Royal Harbor', location: 'Naples, FL', visible: true, photos: [{ url: 'https://st.hzcdn.com/fimgs/99c138450fef1f03_7321-w800-h600-b0-p0---.jpg' }] },
+        { name: 'Beach Condo Rentals', location: 'Fort Myers Beach', visible: true, photos: [{ url: 'https://st.hzcdn.com/fimgs/d3211ea70f9b0a50_6241-w800-h600-b0-p0---.jpg' }] },
+        { name: 'Bayfront', location: 'Fort Myers', visible: true, photos: [{ url: 'https://st.hzcdn.com/simgs/28618b4e0f3668c0_14-9415/home-design.jpg' }] },
+        { name: 'Shadowood Kitchen', location: 'Fort Myers', visible: true, photos: [{ url: 'https://st.hzcdn.com/fimgs/ca718d9e0b85b689_3419-w800-h600-b0-p0---.jpg' }] },
+        { name: 'Estero Remodel', location: 'Estero, FL', visible: true, photos: [{ url: 'https://st.hzcdn.com/fimgs/8cd133df09a2e035_0312-w800-h600-b0-p0---.jpg' }] }
+      ];
+    }
+    let cards = '';
+    albums.forEach((album, i) => {
+      if (!album.visible || !album.photos || album.photos.length === 0) return;
+      const cover = album.photos[0].url;
+      const count = album.photos.length;
+      cards += '<div class="project-card reveal-scale visible" onclick="openGallery(' + i + ',0)"><div class="project-img" style="background-image:url(\'' + cover + '\')"></div><div class="project-overlay"></div><div class="project-info"><div class="project-location">' + album.location + '</div><div class="project-name">' + album.name + '</div><div class="project-view">' + count + ' Photo' + (count > 1 ? 's' : '') + ' — View Project →</div></div></div>';
+    });
+    let html = require('fs').readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+    html = html.replace(/(<div class="portfolio-grid" id="portfolioGrid">)[\s\S]*?(<\/div>\s*<\/section>)/, '$1' + cards + '$2');
+    res.send(html);
+  } catch(err) {
+    console.error(err);
+    res.sendFile(path.join(__dirname, 'index.html'));
+  }
 });
 
 const PORT = process.env.PORT || 3000;
