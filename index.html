@@ -1668,8 +1668,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') galleryNav(1);
 });
 
-// Clear stale album cache and render from defaults first
-localStorage.removeItem('sid_albums');
+// Render from defaults first, then DB overwrites
 renderPortfolio(defaultAlbums);
 
 // ===== PORTAL =====
