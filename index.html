@@ -2195,24 +2195,24 @@ function getActiveRoomIdx() {
 
 // Clipboard paste → vision board
 document.addEventListener('paste', e => {
-  // Only handle when vision board tab is visible
+  // Check if portal is open and vision tab is visible
+  const portal = document.getElementById('portal');
   const visionTab = document.getElementById('tab-vision');
-  if (!visionTab || visionTab.style.display === 'none') return;
+  const portalOpen = portal && portal.classList.contains('active');
+  const visionVisible = visionTab && visionTab.style.display !== 'none';
+
+  if (!portalOpen || !visionVisible) return;
 
   const items = e.clipboardData && e.clipboardData.items;
-  if (!items) return;
+  if (!items || items.length === 0) return;
 
-  let handled = false;
   const roomIdx = getActiveRoomIdx();
 
+  // Look for image blob first (most reliable — right-click → Copy Image)
   for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-
-    // Direct image blob (right-click → Copy Image)
-    if (item.type.startsWith('image/')) {
+    if (items[i].type.startsWith('image/')) {
       e.preventDefault();
-      handled = true;
-      const blob = item.getAsFile();
+      const blob = items[i].getAsFile();
       const reader = new FileReader();
       reader.onload = ev => {
         compressImage(ev.target.result, 800, 0.7, compressed => {
@@ -2221,15 +2221,17 @@ document.addEventListener('paste', e => {
         });
       };
       reader.readAsDataURL(blob);
-      break;
+      return;
     }
+  }
 
-    // HTML with embedded image (some sites copy as HTML)
-    if (item.type === 'text/html') {
-      item.getAsString(html => {
+  // Fallback: check for HTML with an img tag
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].type === 'text/html') {
+      e.preventDefault();
+      items[i].getAsString(html => {
         const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
         if (match && match[1]) {
-          // Try to load the image (may fail due to CORS)
           const img = new Image();
           img.crossOrigin = 'anonymous';
           img.onload = () => {
@@ -2242,19 +2244,22 @@ document.addEventListener('paste', e => {
               const label = prompt('Label this image (optional):', 'Pasted Image') || 'Pasted Image';
               addImageToBoard(dataUrl, label, roomIdx);
             } catch(err) {
-              alert('This image is protected by the source website. Try: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
+              alert('This image is protected by the source website.\n\nTry: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
             }
           };
           img.onerror = () => {
-            alert('Could not load that image. Try: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
+            alert('Could not load that image.\n\nTry: right-click the image → "Copy Image" (not "Copy Image Address"), then paste again.');
           };
           img.src = match[1];
+        } else {
+          alert('No image found in clipboard. Make sure to right-click an image → "Copy Image", then paste here.');
         }
       });
-      if (!handled) { e.preventDefault(); handled = true; }
-      break;
+      return;
     }
   }
+
+  alert('No image found in clipboard. Make sure to right-click an image → "Copy Image", then paste here.');
 });
 
 // Existing conditions upload
